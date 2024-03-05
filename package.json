@@ -1,0 +1,14 @@
+{
+  "urls": [
+    ["arduino_utils/__init__.py", "github:arduino/arduino/arduino-framework-mpy/main/arduino-utils-mpy/arduino_utils/__init__.py"],
+    ["arduino_utils/arduino_utils.py", "github:arduino/arduino/arduino-framework-mpy/main/arduino-utils-mpy/arduino_utils/arduino_utils.py"],
+    ["arduino_utils/amp_common.py", "github:arduino/arduino/arduino-framework-mpy/main/arduino-utils-mpy/arduino_utils/amp_common.py"],
+    ["arduino_utils/amp_settings.py", "github:arduino/arduino/arduino-framework-mpy/main/arduino-utils-mpy/arduino_utils/amp_settings.py"],
+    ["arduino_utils/amp_network.py", "github:arduino/arduino/arduino-framework-mpy/main/arduino-utils-mpy/arduino_utils/amp_network.py"]
+  ],
+  "deps": [
+    ["tarfile-write", "latest"],
+    ["github:SpotlightKid/mrequests", "latest"]
+  ],
+  "version": "0.3.0"
+}
