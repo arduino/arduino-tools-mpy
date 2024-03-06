@@ -437,6 +437,10 @@ def clear_terminal(cursor_visible = True):
 
 def show_commands():
   clear_terminal()
+  with open(f'{get_module_path()}/amp_help.txt', 'r') as help_file:
+    for line in help_file.readlines():
+      print(line, end = '')
+    help_file.close()
 
 
 # TODO:
