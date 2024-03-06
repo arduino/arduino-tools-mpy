@@ -67,8 +67,8 @@ def disable_amp_projects(force_delete_boot = 'N'):
 This operation will delete "boot.py" from your board.
 You can choose to:
 A - Create a default one
-B - Proceed to delete
-C - Do nothing (default)\n''').strip() or 'C'
+B - No boot.py
+C - Cancel\n''').strip() or 'C'
       choice = choice.upper()
     else:
       choice = 'B'
@@ -95,7 +95,7 @@ def install_package(package = None, project = None, url = None):
 
 def create_project(project_name = None, set_default = False, hidden = False):
   p_name = project_name or 'untitled'
-  p_name = "".join(c for c in p_name if c.isalpha() or c.isdigit() or c==' ').rstrip()
+  p_name = "".join(c for c in p_name if c.isalpha() or c.isdigit() or c==' ' or c == '_').rstrip()
   p_name = p_name.replace(' ', '_')
   if not validate_project(project_name):
     project_path = f'{PROJECTS_ROOT}amp_{p_name}'
