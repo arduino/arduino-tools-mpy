@@ -114,7 +114,6 @@ def create_project(project_name = None, set_default = False, hidden = False):
     main_py.write(f'# have fun :) \n')
     main_py.write(f'print("Hello from project {project_name}")')
     main_py.close()
-
     md = app_settings.copy()
     md['name'] = p_name
     md['amp_version'] = _VERSION
@@ -130,6 +129,7 @@ def create_project(project_name = None, set_default = False, hidden = False):
     return md
   return False
 
+
 def hide_project(project_name = None):
   if not validate_project(project_name):
     print(f'project {project_name} does not exist')
@@ -139,6 +139,7 @@ def hide_project(project_name = None):
     hidden_file = open(f'{project_path}/.hidden', 'w')
     hidden_file.write('# this project is hidden')
     hidden_file.close()
+
 
 def unhide_project(project_name = None):
   if not validate_project(project_name):
@@ -171,8 +172,8 @@ def default_project(p = None, fall_back = None):
       a_cfg.write('\n')
       a_cfg.write(fall_back)
     a_cfg.close()
-    if default_p == '':
-      disable_amp_projects()
+    # if default_p == '':
+    #   disable_amp()
     
   else:
     if fs_item_exists(PROJECTS_ROOT + CONFIG_FILE):
@@ -183,7 +184,6 @@ def default_project(p = None, fall_back = None):
     return default_p if default_p is not None else None
 
 
-# make sure that the project you're about to delete is not the default one
 def delete_project(project_name = None, force_confirm = 'n'):
   project_name = project_name.replace(PROJECT_PREFIX, '')
   folder_name = PROJECT_PREFIX + project_name
@@ -200,6 +200,7 @@ def delete_project(project_name = None, force_confirm = 'n'):
     else:
       print(f'Project {project_name} not deleted')
 
+
 def backup_project(project_name = None):
   if validate_project(project_name):
     archive_folder_path = f'{PROJECTS_ROOT}{BACKUP_FOLDER}'
@@ -212,6 +213,7 @@ def backup_project(project_name = None):
     archive.add(project_path)
     archive.close()
     print(f'project {project_name} archived at {archive_path}')
+
 
 def expand_project(archive_name = None):
   if not fs_item_exists(archive_name):
@@ -244,8 +246,10 @@ def expand_project(archive_name = None):
       delete_folder(amp_backup, 'Y')
     os.remove(archive_name)
 
+
 def get_project_settings(project_name):
   return get_project_setting(project_name)
+
 
 def get_project_setting(project_name, key = None):
   if not validate_project(project_name):
@@ -262,6 +266,7 @@ def get_project_setting(project_name, key = None):
   else:
     return md[key]
 
+
 def set_project_settings(project_name, required = [], **keys):
   if not validate_project(project_name) :
     print(f'{project_name} is not a valid project')
@@ -272,36 +277,15 @@ def set_project_settings(project_name, required = [], **keys):
     local_settings = json.load(j_file)
   else:
     local_settings = {}
-
   md = app_settings.copy()
   md.update(local_settings)
-
   for key, value in keys.items():
     md[key] = value
-
   if len(required) > 0:
     md['required'] = required
   j_file = open(get_project(project_name)['path']+'/'+PROJECT_SETTINGS, 'w')
   json.dump(md, j_file)
   j_file.close()
-
-
-
-# def set_project_settings(project_name, keys = None, required = []):
-#   if not validate_project(project_name):
-#     print(f'{project_name} is not a valid project')
-#     return
-#   md = app_settings.copy()
-#   if keys is not None:
-#     for key, value in enumerate(keys):
-#       md[key] = value
-
-#   if len(required) > 0:
-#     md['required'] = required
-#   j_file = open(get_project(project_name)['path']+'/'+PROJECT_SETTINGS, 'w')
-#   json.dump(md, j_file)
-#   j_file.close()
-
 
 
 def list_projects(return_list = False, skip_hidden = True):
@@ -327,17 +311,20 @@ def hash_generator(path):
         yield line
     file.close()
 
+
 def get_hash(file_path):
   hash_object = sha256()
   for l in hash_generator(file_path):
     hash_object.update(l)
   return hex(int.from_bytes(hash_object.digest(), 'big'))
 
+
 # Generic Helpers
 def version_to_number(ver_str):
   ma, mi, fi = map(lambda n: int(n), ver_str.split('.'))
   v_num = ma*100 + mi*10 + fi
   return v_num
+
 
 # MicroPython Helpers
 def create_plain_boot():
@@ -349,6 +336,10 @@ def create_plain_boot():
 
 
 # File System Helpers
+def get_module_path():
+  module_path = '/'.join(__file__.split('/')[:-1])
+  return module_path
+
 
 def fs_root():
   os.chdir('/')
@@ -407,7 +398,7 @@ def file_tree_generator(folder_path, depth=0):
       yield depth, False, item_path
   yield depth, True, folder_path
 
-  
+
 def list_tree(path = '.'):
   if path == '':
     path = '.'
@@ -435,10 +426,10 @@ def delete_folder(path = '.', force_confirm = 'n'):
 
 
 # Console helpers
-
 def show_cursor(show = True):
     print('\033[?25' + ('h' if show else 'l'), end = '')
-        
+
+
 def clear_terminal(cursor_visible = True):
     print("\033[2J\033[H", end = '')
     show_cursor(cursor_visible)
@@ -446,23 +437,7 @@ def clear_terminal(cursor_visible = True):
 
 def show_commands():
   clear_terminal()
-  print()
-  print('enable_amp_projects():\n  Enable support for Arduino MicroPython Projects (AMP)\n')
-  print('disable_amp_projects():\n  Disable support for AMP\n')
-  print('create_project(\'{project name}\', hidden = False):\n  Creates a project with the given name. No spaces or special characters allowed.\n  Making the project hidden will prevent its listing.\n  Useful for launchers and other management utilities not to be messed with.\n')
-  print('delete_project([force_confirm = \'n\']):\n  Deletes the project with the given name.\n  If force_confirm is set to \'Y\' no confirmation will be required to delete the whole tree.\n')
-  print('hide_project(\'{project name}\')):\n  Will set the project to hidden\n')
-  print('unhide_project(\'{project name}\')):\n  Will set the project to visible\n')
-  print('list_projects():\n  Lists all the projects on the board.\n')
-  print('default_project():\n  Displays the project currently set as default (if any)\n')
-  print('default_project(\'{project name}\'):\n  If project name is \'\' (empty string), no default will be set)\n')
-  print('archive_project(\'{project name}\'):\n  Creates a .tar archive of the project with the given name if valid.\n')
-  print('expand_project(\'{archive path}\'):\n  Expands the .tar archive into a project folder. Requires confirmation if project exists.\n')
-  print('delete_folder(\'{folder path}\', [force_confirm = \'n\']):\n  Will attempt to delete the folder and all its content recursively.\n  If force_confirm is set to True it will not ask for confirmation at each file/folder.\n')
-  print()
-  print('list_tree(\'{folder path}\'):\n  [helper] Will recursively list through the path specified, indicationg if the item is a directory (d:) or a file (f:)\n')
-  print('fs_root():\n  [helper] Will ch to \'/\'\n')
-  print('read_file(\'{file path}\'):\n Will read the content of the file and output it to REPL')
+
 
 # TODO:
 # - add origin_url and other data to be passed to project creation
@@ -470,9 +445,7 @@ def show_commands():
 # - parse origin_url for version-matching
 #   - if remote version is bigger, download
 #   - expand downloaded .tar
-# - implement load_project_settings => object
 
 # implement @property for get/set
-# only possible in class
 # maybe in v 1.0 wrap in 
 # class This(sys.__class__):
