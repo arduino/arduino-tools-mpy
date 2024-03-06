@@ -4,7 +4,8 @@
     ["arduino_utils/arduino_utils.py", "github:arduino/arduino/arduino-framework-mpy/main/arduino-utils-mpy/arduino_utils/arduino_utils.py"],
     ["arduino_utils/amp_common.py", "github:arduino/arduino/arduino-framework-mpy/main/arduino-utils-mpy/arduino_utils/amp_common.py"],
     ["arduino_utils/amp_settings.py", "github:arduino/arduino/arduino-framework-mpy/main/arduino-utils-mpy/arduino_utils/amp_settings.py"],
-    ["arduino_utils/amp_network.py", "github:arduino/arduino/arduino-framework-mpy/main/arduino-utils-mpy/arduino_utils/amp_network.py"]
+    ["arduino_utils/amp_network.py", "github:arduino/arduino/arduino-framework-mpy/main/arduino-utils-mpy/arduino_utils/amp_network.py"],
+    ["arduino_utils/amp_help.txt", "github:arduino/arduino/arduino-framework-mpy/main/arduino-utils-mpy/arduino_utils/amp_help.txt"]
   ],
   "deps": [
     ["tarfile-write", "latest"],
