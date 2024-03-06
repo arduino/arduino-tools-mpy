@@ -38,36 +38,39 @@ if NETWORK_UPDATE:
 # enter_default_project()
 # get_projects(root_folder = '/', debug = False)
 
-BACKUP_BOOT_NAME = 'boot_backup.py'
-BACKUP_FOLDER = 'amp_backups'
+BOOT_BACKUP_FILE = 'boot_backup.py'
+BACKUP_FOLDER = f'{PROJECT_PREFIX}backups'
 
 _VERSION = '0.3.0'
 
-def enable_amp_projects():
+def enable_amp():
   fs_root()
-  if fs_item_exists('boot.py'):
-    os.rename('boot.py', BACKUP_BOOT_NAME)
+  if fs_item_exists(BOOT_FILE):
+    os.rename(BOOT_FILE, BOOT_BACKUP_FILE)
   
-  boot_file = open('boot.py', 'w')
+  # enable bootloader
+  boot_file = open(BOOT_FILE, 'w')
   boot_file.write('from arduino_utils.amp_common import *\n')
   boot_file.write('enter_default_project()')
   boot_file.close()
+
+  # create boot config file
   config_file = open(CONFIG_FILE, 'w')
   config_file.close()
 
 
-def disable_amp_projects(force_delete_boot = 'N'):
+def disable_amp(force_delete_boot = 'N'):
   fs_root()
-  if fs_item_exists(BACKUP_BOOT_NAME):
-    os.rename(BACKUP_BOOT_NAME, 'boot.py')
+  if fs_item_exists(BOOT_BACKUP_FILE):
+    os.rename(BOOT_BACKUP_FILE, BOOT_FILE)
   else:
     show_cursor(False)
     if force_delete_boot == 'N':
-      choice = input('''
-This operation will delete "boot.py" from your board.
+      choice = input(f'''
+This operation will delete {BOOT_FILE} from your board.
 You can choose to:
 A - Create a default one
-B - No boot.py
+B - No {BOOT_FILE}
 C - Cancel\n''').strip() or 'C'
       choice = choice.upper()
     else:
@@ -76,10 +79,10 @@ C - Cancel\n''').strip() or 'C'
     if choice == 'A':
       create_plain_boot()
     if choice == 'B':
-      if fs_item_exists('/boot.py'):
-        os.remove('/boot.py')
+      if fs_item_exists(f'/{BOOT_FILE}'):
+        os.remove(f'/{BOOT_FILE}')
     show_cursor()
-    # create_plain_boot()
+    print(f'{PROJECTS_FW_NAME} still enabled')
 
 def install_package(package = None, project = None, url = None):
   destination_path = '/lib'
@@ -105,7 +108,7 @@ def create_project(project_name = None, set_default = False, hidden = False):
     os.mkdir(project_path + '/lib')
 
     # create project's main
-    main_py = open(f'{project_path}/main.py', 'w')
+    main_py = open(f'{project_path}/{MAIN_FILE}', 'w')
     main_py.write(f'# Project Name: {project_name}\n')
     main_py.write(f'# write your code here\n')
     main_py.write(f'# have fun :) \n')
@@ -147,12 +150,12 @@ def unhide_project(project_name = None):
 
 
 def default_project(p = None, fall_back = None):
-  '''
+  f'''
   Displays or sets the default project to run on board startup or reset,
-  immediately after boot.py has finished execution
+  immediately after {BOOT_FILE} has finished execution
 
-  default_project('')             > no default project: if there is a main.py in root it will be run
-  default_project('some_project') > the main.py file in /amp_some_project will run after boot.py
+  default_project('')             > no default project: if there is a {MAIN_FILE} in root it will be run
+  default_project('some_project') > the {MAIN_FILE} file in /amp_some_project will run after {BOOT_FILE}
 
   default_project()               > returns the default project if set
 
@@ -338,10 +341,10 @@ def version_to_number(ver_str):
 
 # MicroPython Helpers
 def create_plain_boot():
-  boot_file = open('/boot.py', 'w')
-  boot_file.write('# This file will be the first one to run on board startup/reset\n')
-  boot_file.write('# main.py (if present) will follow\n')
-  boot_file.write('# place your code in main.py')
+  boot_file = open(f'/{BOOT_FILE}', 'w')
+  boot_file.write(f'# This file will be the first one to run on board startup/reset\n')
+  boot_file.write(f'# {MAIN_FILE} (if present) will follow\n')
+  boot_file.write(f'# place your code in {MAIN_FILE}')
   boot_file.close()
 
 
