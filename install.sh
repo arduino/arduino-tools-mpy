@@ -30,17 +30,21 @@ fi
 
 for py in $SRCDIR/*; do
     f_name=`basename $py`
-    if [ "$ext" = "mpy" ]; then
+    source_extension="${f_name##*.}"
+    destination_extension=$source_extension
+
+    if [ "$ext" = "mpy" ] && [ "$source_extention" = "py" ]; then
       echo "Compiling $SRCDIR/$f_name to $SRCDIR/${f_name%.*}.$ext"
       mpy-cross "$SRCDIR/$f_name"
+      destination_extension=$ext
     fi
     
     echo "Deleting files from board"
-    mpremote rm ":/${LIBDIR}/$PKGDIR/${f_name%.*}.py"
-    mpremote rm ":/${LIBDIR}/$PKGDIR/${f_name%.*}.mpy"
+    mpremote rm ":/${LIBDIR}/$PKGDIR/${f_name%.*}.$source_extension"
+    mpremote rm ":/${LIBDIR}/$PKGDIR/${f_name%.*}.$destination_extension"
 
-    echo "Copying $SRCDIR/${f_name%.*}.$ext to :/${LIBDIR}/$PKGDIR/${f_name%.*}.$ext"
-    mpremote cp $SRCDIR/${f_name%.*}.$ext ":/${LIBDIR}/$PKGDIR/${f_name%.*}.$ext" 
+    echo "Copying $SRCDIR/${f_name%.*}.$source_extension to :/${LIBDIR}/$PKGDIR/${f_name%.*}.$destination_extension"
+    mpremote cp $SRCDIR/${f_name%.*}.$source_extension ":/${LIBDIR}/$PKGDIR/${f_name%.*}.$destination_extension" 
 done
 
 if [ "$ext" = "mpy" ]; then
