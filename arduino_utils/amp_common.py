@@ -11,8 +11,11 @@ from sys import path
 
 PROJECTS_ROOT = '/'
 PROJECT_PREFIX = 'amp_'
+BOOT_FILE = 'boot.py'
 CONFIG_FILE = 'boot.cfg'
+MAIN_FILE = 'main.py'
 PROJECT_SETTINGS = 'app.json'
+PROJECTS_FW_NAME = 'AMP'
 
 try:
   from boot_restore import restore_target
