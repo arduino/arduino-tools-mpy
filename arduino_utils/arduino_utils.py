@@ -391,7 +391,6 @@ def file_tree_generator(folder_path, depth=0):
   for itm in os.ilistdir(folder_path):
     item_path = folder_path + '/' + itm[0]
     item_path = item_path.replace('//', '/')
-    item_path = item_path.replace('./', '/')
     if is_directory(item_path):
       yield from file_tree_generator(item_path, depth=depth + 1)
     else:
@@ -400,8 +399,8 @@ def file_tree_generator(folder_path, depth=0):
 
 
 def list_tree(path = '.'):
-  if path == '':
-    path = '.'
+  if path in ('', '.'):
+    path = os.getcwd()
   for depth, is_folder, file_path in file_tree_generator(path):
     if file_path in ('.', os.getcwd()):
       continue
