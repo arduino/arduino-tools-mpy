@@ -7,7 +7,7 @@
 # ./install.sh mpy
 
 
-PKGDIR="arduino_util"
+PKGDIR="arduino_utils"
 SRCDIR=$PKGDIR
 LIBDIR="lib"
 
