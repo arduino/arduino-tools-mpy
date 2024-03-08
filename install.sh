@@ -59,7 +59,7 @@ function delete_file {
   fi
 }
 
-echo "Installing Arduino Runtime for MicroPython"
+echo "Installing Arduino Tools for MicroPython"
 
 # If directories do not exist, create them
 if ! directory_exists "/${LIBDIR}"; then
