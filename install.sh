@@ -86,6 +86,30 @@ for filename in $SRCDIR/*; do
     source_extension="${f_name##*.}"
     destination_extension=$source_extension
 
+    if [[ -d $filename && "$f_name" == "examples" ]]; then
+      if ! directory_exists "/${LIBDIR}/${PKGDIR}/examples"; then
+        echo "Creating $LIBDIR/$PKGDIR/examples on board"
+        mpremote mkdir "/${LIBDIR}/${PKGDIR}/examples"
+      fi
+
+      for example_file in $filename/*; do
+        example_f_name=`basename $example_file`
+        example_source_extension="${example_f_name##*.}"
+        example_destination_extension=$example_source_extension
+
+        if [[ $existing_files == *"${example_f_name%.*}.$example_source_extension"* ]]; then
+          delete_file ":/${LIBDIR}/$PKGDIR/examples/${example_f_name%.*}.$example_source_extension"
+        fi
+
+        if [ "$example_source_extension" = "py" ] && [[ $existing_files == *"${example_f_name%.*}.mpy"* ]]; then
+          delete_file ":/${LIBDIR}/$PKGDIR/examples/${example_f_name%.*}.mpy"
+        fi
+
+        copy_file $filename/${example_f_name%.*}.$example_destination_extension ":/${LIBDIR}/$PKGDIR/examples/${example_f_name%.*}.$example_destination_extension"
+      done
+      continue
+    fi
+
     if [[ "$ext" == "mpy" && "$source_extension" == "py" ]]; then
       echo "Compiling $SRCDIR/$f_name to $SRCDIR/${f_name%.*}.$ext"
       mpy-cross "$SRCDIR/$f_name"
