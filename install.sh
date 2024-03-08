@@ -6,7 +6,7 @@
 #
 # ./install.sh mpy
 
-
+PKGNAME="Arduino Tools for MicroPython"
 PKGDIR="arduino_utils"
 SRCDIR=$PKGDIR
 LIBDIR="lib"
@@ -59,7 +59,7 @@ function delete_file {
   fi
 }
 
-echo "Installing Arduino Tools for MicroPython"
+echo "Installing $PKGNAME"
 
 # If directories do not exist, create them
 if ! directory_exists "/${LIBDIR}"; then
@@ -106,7 +106,7 @@ for filename in $SRCDIR/*; do
     copy_file $SRCDIR/${f_name%.*}.$destination_extension ":/${LIBDIR}/$PKGDIR/${f_name%.*}.$destination_extension"
 done
 
-if [ "$ext" = "mpy" ]; then
+if [ "$ext" == "mpy" ]; then
   echo "cleaning up mpy files"
   rm $SRCDIR/*.mpy
 fi
