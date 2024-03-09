@@ -164,13 +164,13 @@ def default_project(p = None, fall_back = None):
 
   Note: a default project is not mandatory. See list_projects()
   '''
-  default_p = '' if p is None else p
-  if p is not None:
-    if (not validate_project(default_p)) and not default_p is '':
+  default_p = '' if p == None else p
+  if p != None:
+    if (not validate_project(default_p)) and default_p != '':
       return(OSError(9, f'Project {default_p} does not exist'))
     a_cfg = open(PROJECTS_ROOT + CONFIG_FILE, 'w')
     a_cfg.write(default_p)
-    if fall_back is not None:
+    if fall_back != None:
       a_cfg.write('\n')
       a_cfg.write(fall_back)
     a_cfg.close()
@@ -183,7 +183,7 @@ def default_project(p = None, fall_back = None):
       default_p = a_cfg.readline().strip()
     else:
       return(OSError(errno.ENOENT, 'config file not found'))
-    return default_p if default_p is not None else None
+    return default_p if default_p != None else None
 
 
 def delete_project(project_name = None, force_confirm = False):
@@ -222,6 +222,8 @@ def export_project(project_name = None):
     archive.add(project_path)
     archive.close()
     print(f'project {project_name} archived at {exported_file_path}')
+    return True
+  return False
 
 
 def expand_project(archive_path = None, force_overwrite = False):

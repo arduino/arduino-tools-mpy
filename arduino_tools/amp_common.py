@@ -42,18 +42,17 @@ def enter_default_project():
     default_p = a_cfg.readline().strip()
     reboot_to = a_cfg.readline().strip()
     a_cfg.close()
-    if reboot_to is not '':
+    if reboot_to != '':
       a_cfg = open(PROJECTS_ROOT + CONFIG_FILE, 'w')
       a_cfg.write(reboot_to)
       a_cfg.close()
   else:
     return(OSError(errno.ENOENT, 'config file not found'))
-  # default_p if default_p is not None else None
   enter_project(default_p)
 
 def enter_project(project_name):
   project = get_project(project_name) if validate_project(project_name) else None
-  if project is None:
+  if project == None:
     return
   path.remove('.frozen')
   path.remove('/lib')
