@@ -35,7 +35,7 @@ def validate_project(project_name):
 def enter_default_project():
   if restore_available and restore_target():
     enter_project(restore_target())
-    return
+    return True
   
   if fs_item_exists(PROJECTS_ROOT + CONFIG_FILE):
     a_cfg = open(PROJECTS_ROOT + CONFIG_FILE, 'r')
@@ -46,20 +46,23 @@ def enter_default_project():
       a_cfg = open(PROJECTS_ROOT + CONFIG_FILE, 'w')
       a_cfg.write(reboot_to)
       a_cfg.close()
-  else:
-    return(OSError(errno.ENOENT, 'config file not found'))
-  enter_project(default_p)
+    enter_project(default_p)
+    return True
+  
+  return False
+  
 
 def enter_project(project_name):
   project = get_project(project_name) if validate_project(project_name) else None
   if project == None:
-    return
+    return False
   path.remove('.frozen')
   path.remove('/lib')
   path.append(project['path'] + '/lib')
   path.append('/lib')
   path.append('.frozen')
   os.chdir(project['path'])
+  return True
 
 def get_projects(root_folder = '/'):
   for fs_item in os.ilistdir(root_folder):
