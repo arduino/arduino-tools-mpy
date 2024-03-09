@@ -28,11 +28,10 @@ if NETWORK_UPDATE:
   except ImportError:
     print('Install mrequests')
 
-# THE FOLLOWING ARE IMPORTED FROM THE RUNTIME MODULE
-# TO AVOID CODE DUPLICATION
-# PATH and PREFIX configurations are also part of the RUNTIME module
+# THE FOLLOWING ARE IMPORTED FROM THE LAUNCHER/BOOTLOADER
+# MODULE TO AVOID CODE DUPLICATION.
+# PATH and PREFIX are defined there as well as
 # 
-# validate_project(project_name)
 # default_project(p = None)
 # get_projects()
 # enter_default_project()
@@ -130,24 +129,27 @@ def create_project(project_name = None, set_default = False, hidden = False):
   return False
 
 
-def hide_project(project_name = None):
+def set_project_visibility(project_name, visible = True):
   if not validate_project(project_name):
     print(f'project {project_name} does not exist')
-    return
+    return False
   project_path = f'{PROJECTS_ROOT}amp_{project_name}'
-  if not fs_item_exists(f'{project_path}/.hidden'):
+  if visible:
+    if fs_item_exists(f'{project_path}/.hidden'):
+      os.remove(f'{project_path}/.hidden')
+  else:
     hidden_file = open(f'{project_path}/.hidden', 'w')
     hidden_file.write('# this project is hidden')
     hidden_file.close()
+  return True
+
+
+def hide_project(project_name = None):
+  return(set_project_visibility(project_name, False))
 
 
 def unhide_project(project_name = None):
-  if not validate_project(project_name):
-    print(f'project {project_name} does not exist')
-    return
-  project_path = f'{PROJECTS_ROOT}amp_{project_name}'
-  if fs_item_exists(f'{project_path}/.hidden'):
-      os.remove(f'{project_path}/.hidden')
+  return(set_project_visibility(project_name, True))
 
 
 def default_project(p = None, fall_back = None):
@@ -184,21 +186,25 @@ def default_project(p = None, fall_back = None):
     return default_p if default_p is not None else None
 
 
-def delete_project(project_name = None, force_confirm = 'n'):
+def delete_project(project_name = None, force_confirm = False):
   project_name = project_name.replace(PROJECT_PREFIX, '')
-  folder_name = PROJECT_PREFIX + project_name
-  if default_project() == project_name:
-    print(f'The project "{project_name}" is set as default.')
-    print(f'Set another project as default before you can delete "{project_name}"')
-    return
   if validate_project(project_name):
-    confirm = input(f'Are you sure you want to delete {project_name}? [Y/n]') if force_confirm != 'Y' else 'Y'
+    folder_name = PROJECT_PREFIX + project_name
+    is_default = project_name == default_project()
+    is_default_message = f'"{project_name}" is your default project.\n' if is_default else ''
+    confirm = input(f'{is_default_message}Are you sure you want to delete {project_name}? [Y/n]') if not force_confirm else 'Y'
     if confirm == 'Y':
+      if is_default:
+        default_project('')
       print(f'Deleting project {project_name}')
       fs_root()
-      delete_folder(f'{PROJECTS_ROOT}{folder_name}', force_confirm)
+      delete_folder(f'{PROJECTS_ROOT}{folder_name}', confirm)
+      return True
     else:
       print(f'Project {project_name} not deleted')
+      return False
+  else:
+    return False
 
 
 def backup_project(project_name = None):
@@ -215,12 +221,12 @@ def backup_project(project_name = None):
     print(f'project {project_name} archived at {archive_path}')
 
 
-def expand_project(archive_name = None):
-  if not fs_item_exists(archive_name):
-    print(f'Project archive {archive_name} does not exist')
-    return
+def expand_project(archive_path = None, force_overwrite = False):
+  if not fs_item_exists(archive_path):
+    print(f'Project archive {archive_path} does not exist')
+    return False
   else:
-    archive_file = tarfile.TarFile(archive_name, 'r')
+    archive_file = tarfile.TarFile(archive_path, 'r')
     os.chdir(PROJECTS_ROOT)
     first_tar_item = True
     confirm_delete = 'n'
@@ -228,11 +234,11 @@ def expand_project(archive_name = None):
       if item.type == tarfile.DIRTYPE:
         if first_tar_item:
           amp_name = item.name.strip('/')
-          amp_backup = amp_name+'_'+str(ticks_ms())
+          amp_backup_folder = amp_name+'_'+str(ticks_ms())
           if fs_item_exists(item.name.strip('/')):
-            confirm_delete = input(f'are you sure you want to overwrite {amp_name}? [Y/n]')
+            confirm_delete = input(f'are you sure you want to overwrite {amp_name}? [Y/n]') if not force_overwrite else 'Y'
             if confirm_delete == 'Y':
-              os.rename(amp_name, amp_backup)
+              os.rename(amp_name, amp_backup_folder)
             else:
               print('Operation canceled.')
               return
@@ -243,12 +249,9 @@ def expand_project(archive_name = None):
           of.write(f.read())
       first_tar_item = False
     if confirm_delete == 'Y':
-      delete_folder(amp_backup, 'Y')
-    os.remove(archive_name)
-
-
-def get_project_settings(project_name):
-  return get_project_setting(project_name)
+      delete_folder(amp_backup_folder, 'Y')
+    os.remove(archive_path)
+  return True
 
 
 def get_project_setting(project_name, key = None):
@@ -265,6 +268,10 @@ def get_project_setting(project_name, key = None):
     return md
   else:
     return md[key]
+
+
+def get_project_settings(project_name):
+  return get_project_setting(project_name)
 
 
 def set_project_settings(project_name, required = [], **keys):
@@ -288,10 +295,10 @@ def set_project_settings(project_name, required = [], **keys):
   j_file.close()
 
 
-def list_projects(return_list = False, skip_hidden = True):
+def list_projects(return_list = False, include_hidden = False):
   projects_list = []
   for project in get_projects():
-    if project['hidden'] and skip_hidden:
+    if project['hidden'] and not include_hidden:
       continue
     project['default'] = (default_project() == project['name'])
     
@@ -303,6 +310,8 @@ def list_projects(return_list = False, skip_hidden = True):
   if return_list:
     return projects_list
 
+def get_projects_list(include_hidden = False):
+  return list_projects(return_list = True, include_hidden= include_hidden)
 
 # Hashing Helpers
 def hash_generator(path):
