@@ -3,7 +3,7 @@ __license__ = "MIT License"
 __version__ = "0.2.0"
 __maintainer__ = "ubi de feo [github.com/ubidefeo]"
 
-from os import chdir, stat, ilistdir
+from os import stat, ilistdir, chdir
 from sys import path
 
 PROJECTS_ROOT = '/'
@@ -14,11 +14,6 @@ MAIN_FILE = 'main.py'
 PROJECT_SETTINGS = 'app.json'
 PROJECTS_FW_NAME = 'AMP'
 
-try:
-  from boot_restore import restore_target
-  restore_available = True
-except ImportError:
-  restore_available = False
 
 def validate_project(project_name):
   project_folder = PROJECT_PREFIX + project_name.replace(PROJECT_PREFIX, '')
@@ -29,37 +24,13 @@ def validate_project(project_name):
     return False
   return True
 
-def enter_default_project():
-  if restore_available and restore_target():
-    enter_project(restore_target())
-    return True
-  
-  if fs_item_exists(PROJECTS_ROOT + CONFIG_FILE):
-    a_cfg = open(PROJECTS_ROOT + CONFIG_FILE, 'r')
-    default_p = a_cfg.readline().strip()
-    reboot_to = a_cfg.readline().strip()
-    a_cfg.close()
-    if reboot_to != '':
-      a_cfg = open(PROJECTS_ROOT + CONFIG_FILE, 'w')
-      a_cfg.write(reboot_to)
-      a_cfg.close()
-    enter_project(default_p)
-    return True
-  
-  return False
-  
 
-def enter_project(project_name):
-  project = get_project(project_name) if validate_project(project_name) else None
-  if project == None:
-    return False
-  path.remove('.frozen')
-  path.remove('/lib')
-  path.append(project['path'] + '/lib')
-  path.append('/lib')
-  path.append('.frozen')
-  chdir(project['path'])
-  return True
+def get_project(project_name):  
+  for project in get_projects():
+    if project['name'] == project_name:
+      return project
+  return None
+
 
 def get_projects(root_folder = '/'):
   for fs_item in ilistdir(root_folder):
@@ -77,11 +48,6 @@ def get_projects(root_folder = '/'):
         prj_dict['hidden'] = True
       yield prj_dict
 
-def get_project(project_name):  
-  for project in get_projects():
-    if project['name'] == project_name:
-      return project
-  return None
 
 def fs_item_exists(path):
   try:

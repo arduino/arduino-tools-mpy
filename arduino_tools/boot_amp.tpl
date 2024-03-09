@@ -1,2 +1,2 @@
-from arduino_tools.amp_common import *
+from arduino_tools.amp_loader import *
 enter_default_project()

@@ -6,8 +6,11 @@ __maintainer__ = "ubi de feo [github.com/ubidefeo]"
 from .amp_common import *
 from .amp_settings import *
 from .amp_files import *
+from .amp_loader import *
+import os
 import mip
 import json
+from hashlib import sha256
 from time import ticks_ms
 from machine import soft_reset
 
@@ -186,7 +189,7 @@ def default_project(p = None, fall_back = None):
       a_cfg = open(PROJECTS_ROOT + CONFIG_FILE, 'r')
       default_p = a_cfg.readline().strip()
     else:
-      return(OSError(errno.ENOENT, 'config file not found'))
+      default_p = None
     return default_p if default_p != None else None
 
 
@@ -388,7 +391,7 @@ def delete_fs_item(fs_path, is_folder = False, test = False):
 
 def read_file(path):
   if not fs_item_exists(path):
-    return OSError(errno.ENOENT, f'{path} does not exist')
+    print(f'{path} does not exist')
   with open(path, 'r') as file:
     for line in file.readlines():
       print(line, end = '')
@@ -404,9 +407,8 @@ def file_tree_generator(folder_path, depth=0):
   try:
     os.listdir(folder_path)
   except OSError as err:
-    if err.errno == errno.ENOENT:
       print('path not existing')
-      return
+      return False
   for itm in os.ilistdir(folder_path):
     item_path = folder_path + '/' + itm[0]
     item_path = item_path.replace('//', '/')
