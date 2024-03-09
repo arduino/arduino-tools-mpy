@@ -5,6 +5,7 @@ __maintainer__ = "ubi de feo [github.com/ubidefeo]"
 
 from .amp_common import *
 from .amp_settings import *
+from .amp_files import *
 import mip
 import json
 from time import ticks_ms
@@ -47,15 +48,16 @@ def enable_amp():
   if fs_item_exists(BOOT_FILE):
     os.rename(BOOT_FILE, BOOT_BACKUP_FILE)
   
-  # enable bootloader
-  boot_file = open(BOOT_FILE, 'w')
-  boot_file.write('from arduino_tools.amp_common import *\n')
-  boot_file.write('enter_default_project()')
-  boot_file.close()
+  # create bootloader from template
+  success, message, exception = template_to_file('boot_amp.tpl', f'{PROJECTS_ROOT}/{BOOT_FILE}')
+  if not success:
+    print(f'Error creating {BOOT_FILE}: {message}')
+    return None
 
   # create boot config file
-  config_file = open(CONFIG_FILE, 'w')
-  config_file.close()
+  if not fs_item_exists(CONFIG_FILE):
+    config_file = open(CONFIG_FILE, 'w')
+    config_file.close()
 
 
 def disable_amp(force_delete_boot = 'N'):
@@ -99,34 +101,36 @@ def create_project(project_name = None, set_default = False, hidden = False):
   p_name = project_name or 'untitled'
   p_name = "".join(c for c in p_name if c.isalpha() or c.isdigit() or c==' ' or c == '_').rstrip()
   p_name = p_name.replace(' ', '_')
-  if not validate_project(project_name):
-    project_path = f'{PROJECTS_ROOT}amp_{p_name}'
+  if validate_project(project_name):
+    return None
+  project_path = f'{PROJECTS_ROOT}amp_{p_name}'
 
-    # create project's folders
-    os.mkdir(project_path)
-    os.mkdir(project_path + '/lib')
+  # create project's folders
+  if fs_item_exists(project_path):
+    return None
+  os.mkdir(project_path)
+  os.mkdir(project_path + '/lib')
 
-    # create project's main
-    main_py = open(f'{project_path}/{MAIN_FILE}', 'w')
-    main_py.write(f'# Project Name: {project_name}\n')
-    main_py.write(f'# write your code here\n')
-    main_py.write(f'# have fun :) \n')
-    main_py.write(f'print("Hello from project {project_name}")')
-    main_py.close()
-    md = app_settings.copy()
-    md['name'] = p_name
-    md['amp_version'] = _VERSION
-    with open(f'{project_path}/{PROJECT_SETTINGS}', 'w') as config_file:
-      json.dump(md, config_file)
-      config_file.close()
+  # create project's main from template
+  success, message, exception = template_to_file('main.tpl', f'{project_path}/{MAIN_FILE}', project_name = p_name)
+  if not success:
+    print(f'Error creating {MAIN_FILE}: {message}')
+    return None
 
-    if hidden:
-      hide_project(p_name)
+  md = app_settings.copy()
+  md['name'] = p_name
+  md['amp_version'] = _VERSION
+  with open(f'{project_path}/{PROJECT_SETTINGS}', 'w') as config_file:
+    json.dump(md, config_file)
+    config_file.close()
 
-    if set_default:
-      default_project(project_name)
-    return md
-  return False
+  if hidden:
+    hide_project(p_name)
+
+  if set_default:
+    default_project(project_name)
+  return md
+
 
 
 def set_project_visibility(project_name, visible = True):
@@ -342,11 +346,12 @@ def version_to_number(ver_str):
 
 # MicroPython Helpers
 def create_plain_boot():
-  boot_file = open(f'/{BOOT_FILE}', 'w')
-  boot_file.write(f'# This file will be the first one to run on board startup/reset\n')
-  boot_file.write(f'# {MAIN_FILE} (if present) will follow\n')
-  boot_file.write(f'# place your code in {MAIN_FILE}')
-  boot_file.close()
+  # create project's main from template
+  success, message, exception = template_to_file('boot_plain.tpl', f'{PROJECTS_ROOT}/{BOOT_FILE}')
+  if not success:
+    print(f'Error creating {BOOT_FILE}: {message}')
+    return None
+  return True
 
 
 # File System Helpers
