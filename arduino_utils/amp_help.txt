@@ -1,8 +1,8 @@
 enable_amp():
-  Enable support for Arduino MicroPython Projects (AMP)\n
+  Enable support for Arduino MicroPython Projects (AMP).
 
 disable_amp():
-  Disable support for AMP\n
+  Disable support for AMP.
 
 create_project('{project name}', set_default = False, hidden = False):
   Creates a project with the given name. No special characters allowed. Spaces will be converted to '_'
@@ -15,14 +15,19 @@ delete_project([force_confirm = 'n']):
   If force_confirm is set to 'Y' no confirmation will be required to delete the whole tree.
 
 hide_project('{project name}'):
-  Will set the project to hidden
+  Will set the project to hidden.
 
 unhide_project('{project name}'):
-  Will set the project to visible
+  Will set the project to visible.
 
-list_projects(return_list = False):
-  Lists all the projects on the board.
-  If return_list is True, an Array will be returned.
+list_projects(return_list = False, include_hidden = False): [REPL/interactive]
+  Interactively list projects in REPL unless return_list is True.
+  Hidden projects are excluded by default.
+
+get_projects_list(include_hidden = False)
+  Returns an Array of projects and some basic info:
+  Path, name, default, hidden.
+  Hidden projects are excluded by default.
 
 default_project():
   Displays the project currently set as default (if any)
@@ -36,8 +41,9 @@ backup_project('{project name}'):
   The archive file will be named appending a timestamp to the project name.
   The archive will be saved in '/amp_backups/filename_timestamp.tar'
 
-expand_project('{archive path}'):
-  Expands the .tar archive into a project folder. Requires confirmation if project exists.
+expand_project('{archive path}', force_overwrite = False):
+  Expands the .tar archive into a project folder.
+  Requires confirmation if project exists unless force_overwrite is True.
 
 delete_folder('{folder path}', [force_confirm = 'n']):
   Will attempt to delete the folder and all its content recursively.
