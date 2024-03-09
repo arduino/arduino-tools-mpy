@@ -38,7 +38,7 @@ if NETWORK_UPDATE:
 # get_projects(root_folder = '/', debug = False)
 
 BOOT_BACKUP_FILE = 'boot_backup.py'
-BACKUP_FOLDER = f'{PROJECT_PREFIX}backups'
+EXPORT_FOLDER = f'{PROJECT_PREFIX}exports'
 
 _VERSION = '0.3.0'
 
@@ -207,18 +207,21 @@ def delete_project(project_name = None, force_confirm = False):
     return False
 
 
-def backup_project(project_name = None):
+def export_project(project_name = None):
   if validate_project(project_name):
-    archive_folder_path = f'{PROJECTS_ROOT}{BACKUP_FOLDER}'
-    if not fs_item_exists(archive_folder_path):
-      os.mkdir(archive_folder_path)
-    archive_path = f'{archive_folder_path}/{project_name}_{ticks_ms()}.tar'
-    archive = tarfile.TarFile(archive_path, 'w')
-    folder_name = PROJECT_PREFIX + project_name
-    project_path = f'{PROJECTS_ROOT}{folder_name}'
+    export_folder = f'{PROJECTS_ROOT}{EXPORT_FOLDER}'
+    if not fs_item_exists(export_folder):
+      os.mkdir(export_folder)
+    exported_file_path = f'{export_folder}/{project_name}.tar'
+    if fs_item_exists(exported_file_path):
+      exported_file_path = f'{export_folder}/{project_name}_{ticks_ms()}.tar'
+    
+    archive = tarfile.TarFile(exported_file_path, 'w')
+    project_folder = PROJECT_PREFIX + project_name
+    project_path = f'{PROJECTS_ROOT}{project_folder}'
     archive.add(project_path)
     archive.close()
-    print(f'project {project_name} archived at {archive_path}')
+    print(f'project {project_name} archived at {exported_file_path}')
 
 
 def expand_project(archive_path = None, force_overwrite = False):

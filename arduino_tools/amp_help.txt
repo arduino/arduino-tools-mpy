@@ -36,10 +36,10 @@ default_project('{project name}', fall_back = None):
   If project name is '' (empty string), no default will be set.
   If fall_back is set (and is a valid project), at the next reset/boot that will become the default project to run.
 
-backup_project('{project name}'):
+export_project('{project name}'):
   Creates a .tar archive of the project with the given name if valid.
   The archive file will be named appending a timestamp to the project name.
-  The archive will be saved in '/amp_backups/filename_timestamp.tar'
+  The archive will be saved in '/amp_exports/filename.tar'
 
 expand_project('{archive path}', force_overwrite = False):
   Expands the .tar archive into a project folder.
