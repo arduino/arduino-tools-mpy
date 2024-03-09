@@ -49,7 +49,7 @@ def enable_amp():
   
   # enable bootloader
   boot_file = open(BOOT_FILE, 'w')
-  boot_file.write('from arduino_utils.amp_common import *\n')
+  boot_file.write('from arduino_tools.amp_common import *\n')
   boot_file.write('enter_default_project()')
   boot_file.close()
 

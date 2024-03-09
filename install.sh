@@ -7,7 +7,7 @@
 # ./install.sh mpy
 
 PKGNAME="Arduino Tools for MicroPython"
-PKGDIR="arduino_utils"
+PKGDIR="arduino_tools"
 SRCDIR=$PKGDIR
 LIBDIR="lib"
 
