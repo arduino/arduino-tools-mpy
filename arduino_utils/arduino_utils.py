@@ -28,11 +28,10 @@ if NETWORK_UPDATE:
   except ImportError:
     print('Install mrequests')
 
-# THE FOLLOWING ARE IMPORTED FROM THE RUNTIME MODULE
-# TO AVOID CODE DUPLICATION
-# PATH and PREFIX configurations are also part of the RUNTIME module
+# THE FOLLOWING ARE IMPORTED FROM THE LAUNCHER/BOOTLOADER
+# MODULE TO AVOID CODE DUPLICATION.
+# PATH and PREFIX are defined there as well as
 # 
-# validate_project(project_name)
 # default_project(p = None)
 # get_projects()
 # enter_default_project()
@@ -130,24 +129,27 @@ def create_project(project_name = None, set_default = False, hidden = False):
   return False
 
 
-def hide_project(project_name = None):
+def set_project_visibility(project_name, visible = True):
   if not validate_project(project_name):
     print(f'project {project_name} does not exist')
-    return
+    return False
   project_path = f'{PROJECTS_ROOT}amp_{project_name}'
-  if not fs_item_exists(f'{project_path}/.hidden'):
+  if visible:
+    if fs_item_exists(f'{project_path}/.hidden'):
+      os.remove(f'{project_path}/.hidden')
+  else:
     hidden_file = open(f'{project_path}/.hidden', 'w')
     hidden_file.write('# this project is hidden')
     hidden_file.close()
+  return True
+
+
+def hide_project(project_name = None):
+  return(set_project_visibility(project_name, False))
 
 
 def unhide_project(project_name = None):
-  if not validate_project(project_name):
-    print(f'project {project_name} does not exist')
-    return
-  project_path = f'{PROJECTS_ROOT}amp_{project_name}'
-  if fs_item_exists(f'{project_path}/.hidden'):
-      os.remove(f'{project_path}/.hidden')
+  return(set_project_visibility(project_name, True))
 
 
 def default_project(p = None, fall_back = None):
@@ -247,10 +249,6 @@ def expand_project(archive_name = None):
     os.remove(archive_name)
 
 
-def get_project_settings(project_name):
-  return get_project_setting(project_name)
-
-
 def get_project_setting(project_name, key = None):
   if not validate_project(project_name):
     print(f'{project_name} is not a valid project')
@@ -265,6 +263,10 @@ def get_project_setting(project_name, key = None):
     return md
   else:
     return md[key]
+
+
+def get_project_settings(project_name):
+  return get_project_setting(project_name)
 
 
 def set_project_settings(project_name, required = [], **keys):
@@ -303,6 +305,8 @@ def list_projects(return_list = False, skip_hidden = True):
   if return_list:
     return projects_list
 
+def get_projects_list():
+  return list_projects(return_list = True, skip_hidden= False)
 
 # Hashing Helpers
 def hash_generator(path):
