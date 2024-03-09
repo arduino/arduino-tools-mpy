@@ -3,10 +3,7 @@ __license__ = "MIT License"
 __version__ = "0.2.0"
 __maintainer__ = "ubi de feo [github.com/ubidefeo]"
 
-import errno
-import os
-from hashlib import sha256
-from os import stat, ilistdir
+from os import chdir, stat, ilistdir
 from sys import path
 
 PROJECTS_ROOT = '/'
@@ -61,11 +58,11 @@ def enter_project(project_name):
   path.append(project['path'] + '/lib')
   path.append('/lib')
   path.append('.frozen')
-  os.chdir(project['path'])
+  chdir(project['path'])
   return True
 
 def get_projects(root_folder = '/'):
-  for fs_item in os.ilistdir(root_folder):
+  for fs_item in ilistdir(root_folder):
     fs_item_name = fs_item[0]
     if validate_project(fs_item_name):
       prj_dict = {
@@ -80,7 +77,7 @@ def get_projects(root_folder = '/'):
         prj_dict['hidden'] = True
       yield prj_dict
 
-def get_project(project_name):
+def get_project(project_name):  
   for project in get_projects():
     if project['name'] == project_name:
       return project
@@ -88,7 +85,7 @@ def get_project(project_name):
 
 def fs_item_exists(path):
   try:
-    os.stat(path)
+    stat(path)
     return True
   except OSError as e:
     return False
