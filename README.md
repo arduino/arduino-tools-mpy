@@ -58,19 +58,19 @@ Best practice is to copy all the files in the board's `/lib/arduino_tools`, whic
 Enter a REPL session
 
 ```python
-from arduino_tools import *
+from arduino_tools.arduino_tools import *
 show_commands()
 ```
 
 read through the commands to know more.
 
 To enable the projects framework run
-`enable_amp_projects()`
+`enable_amp()`
 
 The current `boot.py` (if present) will be backed up to `boot_backup.py`.
 Any other file, including the `main.py` in the root (if present), will remain untouched.
 
-`disable_amp_projects()` will restore boot.py from boot_backup.py if it was previously created.
+`disable_amp()` will restore boot.py from boot_backup.py if it was previously created.
 If no backup file will be found it will ask the following:
 
 This operation will delete "boot.py" from your board.
@@ -79,7 +79,7 @@ A - Create a default one
 B - Proceed to delete
 C - Do nothing (default)
 
-unless `disable_amp_projects('Y')` is invoked, which will force the choice to be B.
+unless `disable_amp('Y')` is invoked, which will force the choice to be B.
 
 Setting the default project to '' (default_project('')) will also generate a choice menu.
 
@@ -90,7 +90,7 @@ The above behaviour is the result of Q&A sessions with other MicroPython develop
 Enable AMP and create a few projects
 
 ```python
->>> from arduino_tools import *
+>>> from arduino_tools.arduino_tools import *
 >>> enable_amp_projects()
 
 >>> create_project('abc')
