@@ -1,4 +1,4 @@
-from time import ticks_us
+from time import time
 
 def get_template_path(file_name):
   return '/'.join(__file__.split('/')[:-1]) + f'/{file_name}'
@@ -29,7 +29,7 @@ def new_file_from_source(file_name = None, destination_path = '.', overwrite = F
   try:
     open(new_sketch_path, 'r')
     if not overwrite:
-      file_name = f'{file_name}_{ticks_us()}'
+      file_name = f'{file_name}_{time()}'
   except OSError:
     pass
   
