@@ -11,6 +11,6 @@ app_settings = OrderedDict({
                       "created": 0, 
                       "modified": 0, 
                       "version": "0.0.0", 
-                      "origin_url": "", 
+                      "origin_url": "https://arduino.cc", 
                       "amp_version": "0.0.0"
 })

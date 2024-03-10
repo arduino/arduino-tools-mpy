@@ -1,11 +1,13 @@
 {
   "urls": [
     ["arduino_tools/__init__.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/__init__.py"],
-    ["arduino_tools/arduino_tools.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/arduino_tools.py"],
     ["arduino_tools/amp_common.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/amp_common.py"],
-    ["arduino_tools/amp_settings.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/amp_settings.py"],
+    ["arduino_tools/amp_files.txt", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/amp_files.txt"]
+    ["arduino_tools/amp_help.txt", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/amp_help.txt"],
+    ["arduino_tools/amp_loader.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/amp_loader.py"]
     ["arduino_tools/amp_network.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/amp_network.py"],
-    ["arduino_tools/amp_help.txt", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/amp_help.txt"]
+    ["arduino_tools/amp_settings.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/amp_settings.py"],
+    ["arduino_tools/arduino_tools.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/arduino_tools.py"]
   ],
   "deps": [
     ["tarfile-write", "latest"],
