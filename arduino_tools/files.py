@@ -1,3 +1,5 @@
+from time import ticks_us
+
 def get_template_path(file_name):
   return '/'.join(__file__.split('/')[:-1]) + f'/{file_name}'
 
@@ -47,4 +49,4 @@ def new_file_from_source(file_name = None, destination_path = '.', overwrite = F
 
 def copy_py(source_path = '.', destination_path = '.', file_name = None, overwrite = False):
   file_name = file_name or 'main'
-  return create_sketch(file_name = file_name, destination_path = destination_path, overwrite = overwrite, source_path = source_path)
+  return new_file_from_source(file_name = file_name, destination_path = destination_path, overwrite = overwrite, source_path = source_path)
