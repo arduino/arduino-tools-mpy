@@ -11,7 +11,7 @@ import os
 import mip
 import json
 from hashlib import sha256
-from time import ticks_ms
+from time import time
 from machine import soft_reset
 
 try:
@@ -221,7 +221,7 @@ def export_project(project_name = None):
       os.mkdir(export_folder)
     exported_file_path = f'{export_folder}/{project_name}.tar'
     if fs_item_exists(exported_file_path):
-      exported_file_path = f'{export_folder}/{project_name}_{ticks_ms()}.tar'
+      exported_file_path = f'{export_folder}/{project_name}_{time()}.tar'
     
     archive = tarfile.TarFile(exported_file_path, 'w')
     project_folder = PROJECT_PREFIX + project_name
@@ -246,7 +246,7 @@ def expand_project(archive_path = None, force_overwrite = False):
       if item.type == tarfile.DIRTYPE:
         if first_tar_item:
           amp_name = item.name.strip('/')
-          amp_backup_folder = amp_name+'_'+str(ticks_ms())
+          amp_backup_folder = amp_name+'_'+str(time())
           if fs_item_exists(item.name.strip('/')):
             confirm_delete = input(f'are you sure you want to overwrite {amp_name}? [Y/n]') if not force_overwrite else 'Y'
             if confirm_delete == 'Y':
