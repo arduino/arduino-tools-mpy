@@ -1,6 +1,6 @@
 __author__ = "ubi de feo"
-__license__ = "MIT License"
-__version__ = "0.2.0"
+__license__ = "MPL 2.0"
+__version__ = "0.4.0"
 __maintainer__ = "ubi de feo [github.com/ubidefeo]"
 
 from .common import *
@@ -45,7 +45,6 @@ if NETWORK_UPDATE:
 BOOT_BACKUP_FILE = 'boot_backup.py'
 EXPORT_FOLDER = f'{PROJECT_PREFIX}exports'
 
-_VERSION = '0.3.0'
 
 def enable_amp():
   fs_root()
@@ -123,7 +122,7 @@ def create_project(project_name = None, set_default = False, hidden = False):
 
   md = app_settings.copy()
   md['name'] = p_name
-  md['amp_version'] = _VERSION
+  md['amp_version'] = TOOLS_VERSION
   with open(f'{project_path}/{PROJECT_SETTINGS}', 'w') as config_file:
     json.dump(md, config_file)
     config_file.close()

@@ -1,6 +1,6 @@
 __author__ = "ubi de feo"
-__license__ = "MIT License"
-__version__ = "0.2.0"
+__license__ = "MPL 2.0"
+__version__ = "0.4.0"
 __maintainer__ = "ubi de feo [github.com/ubidefeo]"
 
 from os import stat, ilistdir, chdir
@@ -13,7 +13,7 @@ CONFIG_FILE = 'boot.cfg'
 MAIN_FILE = 'main.py'
 PROJECT_SETTINGS = 'app.json'
 PROJECTS_FW_NAME = 'AMP'
-
+TOOLS_VERSION = '0.4.0'
 
 def validate_project(project_name):
   project_folder = PROJECT_PREFIX + project_name.replace(PROJECT_PREFIX, '')
