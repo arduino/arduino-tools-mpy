@@ -7,7 +7,10 @@
     ["arduino_tools/amp_loader.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/amp_loader.py"],
     ["arduino_tools/amp_network.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/amp_network.py"],
     ["arduino_tools/amp_settings.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/amp_settings.py"],
-    ["arduino_tools/arduino_tools.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/arduino_tools.py"]
+    ["arduino_tools/arduino_tools.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/arduino_tools.py"],
+    ["arduino_tools/boot_amp.tpl", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/boot_amp.tpl"],
+    ["arduino_tools/boot_plain.tpl", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/boot_plain.tpl"],
+    ["arduino_tools/main.tpl", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/main.tpl"],
   ],
   "deps": [
     ["tarfile-write", "latest"],
