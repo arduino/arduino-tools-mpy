@@ -1,3 +1,14 @@
+# This file, if present, is executed on every boot/reset.
+# It can be used to force booting into a specific project,
+# such as a launcher application, when a specific condition is met.
+
+# In this example, the condition is the state of pin D2:
+# At boot time, if the Arduino Tools Loader is enabled, the method
+# enter_default_project() will check for the presence of this file,
+# and if it exists, it will call the restore_target() method from it.
+# A return value of None will be ignored, while a string will be used
+# to enter the project with that name, in this case 'app_launcher'.
+
 __author__ = "ubi de feo"
 __license__ = "MPL 2.0"
 __version__ = "0.4.0"
