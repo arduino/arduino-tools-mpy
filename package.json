@@ -1,13 +1,19 @@
 {
   "urls": [
     ["arduino_tools/__init__.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/__init__.py"],
-    ["arduino_tools/amp_common.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/amp_common.py"],
-    ["arduino_tools/amp_files.txt", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/amp_files.txt"],
-    ["arduino_tools/amp_help.txt", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/amp_help.txt"],
-    ["arduino_tools/amp_loader.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/amp_loader.py"],
-    ["arduino_tools/amp_network.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/amp_network.py"],
     ["arduino_tools/amp_settings.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/amp_settings.py"],
-    ["arduino_tools/arduino_tools.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/arduino_tools.py"]
+    ["arduino_tools/common.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/common.py"],
+    ["arduino_tools/files.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/files.py"],
+    ["arduino_tools/helpers.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/helpers.py"],
+    ["arduino_tools/loader.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/loader.py"],
+    ["arduino_tools/network.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/network.py"],
+    ["arduino_tools/projects.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/projects.py"],
+
+    ["arduino_tools/help.txt", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/help.txt"],
+    
+    ["arduino_tools/boot_amp.tpl", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/boot_amp.tpl"],
+    ["arduino_tools/boot_plain.tpl", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/boot_plain.tpl"],
+    ["arduino_tools/main.tpl", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/main.tpl"]
   ],
   "deps": [
     ["tarfile-write", "latest"],
