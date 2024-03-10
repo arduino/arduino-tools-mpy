@@ -44,6 +44,6 @@ def check_for_update(project_name):
   if not validate_project(project_name):
     print(f'{project_name} is not valid or does not exist')
     return
-  p_meta = get_project_metadata(project_name)
+  p_meta = get_project_settings(project_name)
   
 
