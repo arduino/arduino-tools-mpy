@@ -3,6 +3,7 @@ __license__ = "MPL 2.0"
 __version__ = "0.4.0"
 __maintainer__ = "ubi de feo [github.com/ubidefeo]"
 
+from .common import *
 
 try:
   from boot_restore import restore_target

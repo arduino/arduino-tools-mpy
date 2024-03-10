@@ -16,7 +16,7 @@ The framework exploits the standard behaviour of MicroPython at start/reset/soft
 
 The framework's boot.py only requires two lines for the following operations:
 
-- import the minimum required parts of arduino_tools (amp_common) from the board's FileSystem (preferrably installed as a module in /lib/arduino_tools)
+- import the minimum required parts of arduino_tools (common) from the board's FileSystem (preferrably installed as a module in /lib/arduino_tools)
 - call a method to enter the default project's path and apply some temporary settings to configure the running environment (search paths and launch configuration changes) which will be reset at the next start.
 
 If no default project is set, it will fall back to the `main.py` in the board's root if present.
@@ -58,7 +58,7 @@ Best practice is to copy all the files in the board's `/lib/arduino_tools`, whic
 Enter a REPL session
 
 ```python
-from arduino_tools import *
+from arduino_tools.projects import *
 show_commands()
 ```
 
