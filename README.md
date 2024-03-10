@@ -71,6 +71,7 @@ The current `boot.py` (if present) will be backed up to `boot_backup.py`.
 Any other file, including the `main.py` in the root (if present), will remain untouched.
 
 `disable_amp()` will restore boot.py from boot_backup.py if it was previously created.
+
 If no backup file will be found it will ask the following:
 
 This operation will delete "boot.py" from your board.
