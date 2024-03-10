@@ -1,3 +1,10 @@
+__author__ = "ubi de feo"
+__license__ = "MPL 2.0"
+__version__ = "0.4.0"
+__maintainer__ = "ubi de feo [github.com/ubidefeo]"
+
+from .common import *
+from .projects import get_project_settings
 import network
 import binascii
 import time
@@ -44,6 +51,6 @@ def check_for_update(project_name):
   if not validate_project(project_name):
     print(f'{project_name} is not valid or does not exist')
     return
-  p_meta = get_project_metadata(project_name)
+  p_meta = get_project_settings(project_name)
   
 

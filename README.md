@@ -16,13 +16,13 @@ The framework exploits the standard behaviour of MicroPython at start/reset/soft
 
 The framework's boot.py only requires two lines for the following operations:
 
-- import the minimum required parts of arduino_tools (amp_common) from the board's FileSystem (preferrably installed as a module in /lib/arduino_tools)
+- import the minimum required parts of arduino_tools (common) from the board's FileSystem (preferrably installed as a module in /lib/arduino_tools)
 - call a method to enter the default project's path and apply some temporary settings to configure the running environment (search paths and launch configuration changes) which will be reset at the next start.
 
 If no default project is set, it will fall back to the `main.py` in the board's root if present.
 No error condition will be generated, as MicroPython is capable of handling the absence of `boot.py` and/or `main.py`.
 
-The reason for this to work is that if a default project is selected, the `enter_default_project()` will issue an `os.chdir()` command and enter the project's folder.
+If a default project is set, the `enter_default_project()` will issue an `os.chdir()` command and enter the project's folder.
 MicroPython will automatically run the main.py it finds in its Current Working Directory.
 
 **NOTES:**
@@ -58,7 +58,7 @@ Best practice is to copy all the files in the board's `/lib/arduino_tools`, whic
 Enter a REPL session
 
 ```python
-from arduino_tools.arduino_tools import *
+from arduino_tools.projects import *
 show_commands()
 ```
 
@@ -71,6 +71,7 @@ The current `boot.py` (if present) will be backed up to `boot_backup.py`.
 Any other file, including the `main.py` in the root (if present), will remain untouched.
 
 `disable_amp()` will restore boot.py from boot_backup.py if it was previously created.
+
 If no backup file will be found it will ask the following:
 
 This operation will delete "boot.py" from your board.
@@ -90,8 +91,8 @@ The above behaviour is the result of Q&A sessions with other MicroPython develop
 Enable AMP and create a few projects
 
 ```python
->>> from arduino_tools.arduino_tools import *
->>> enable_amp_projects()
+>>> from arduino_tools.projects import *
+>>> enable_amp()
 
 >>> create_project('abc')
 >>> create_project('def')
