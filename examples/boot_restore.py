@@ -5,7 +5,7 @@ __maintainer__ = "ubi de feo [github.com/ubidefeo]"
 
 from machine import Pin
 restore_pin = Pin('D2', Pin.IN, Pin.PULL_UP)
-restore_target_project = 'alvik_launcher'
+restore_target_project = 'app_launcher'
 
 def restore_target():
   if restore_pin.value() == False:
