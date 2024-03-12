@@ -35,6 +35,8 @@ def get_project(project_name):
 def get_projects(root_folder = '/'):
   for fs_item in ilistdir(root_folder):
     fs_item_name = fs_item[0]
+    if fs_item[0][0:len(PROJECT_PREFIX)] != PROJECT_PREFIX:
+      continue
     if validate_project(fs_item_name):
       prj_dict = {
         'name': '',
