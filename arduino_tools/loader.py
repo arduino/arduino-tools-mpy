@@ -25,9 +25,7 @@ def enter_default_project():
       a_cfg = open(PROJECTS_ROOT + CONFIG_FILE, 'w')
       a_cfg.write(reboot_to)
       a_cfg.close()
-    enter_project(default_p)
-    return True
-  
+    return enter_project(default_p)
   return False
   
 
