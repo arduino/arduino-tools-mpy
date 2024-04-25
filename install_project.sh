@@ -1,23 +1,11 @@
 #!/bin/bash
 #
-# MicroPython Package Installer
-# Created by: Ubi de Feo and Sebastian Romero
-# 
-# Installs a MicroPython Package to a board using mpremote.
-# 
-# This script accepts an optional argument to compile .py files to .mpy.
-# Simply run the script with the optional argument:
-#
-# ./install.sh mpy
+# Early PoC for installing a project on a target board
 
-# Name to display during installation
-PKGNAME="Arduino Tools for MicroPython"
-# Destination directory for the package on the board
+PKGNAME="Project Name"
 PKGDIR="arduino_tools"
-# Source directory for the package on the host
 SRCDIR=$PKGDIR
-# Board library directory
-LIBDIR="lib"
+PROJECT_DIR="/amp_project_name"
 
 # File system operations such as "mpremote mkdir" or "mpremote rm"
 # will generate an error if the folder exists or if the file does not exist.
@@ -70,14 +58,14 @@ function delete_file {
 echo "Installing $PKGNAME"
 
 # If directories do not exist, create them
-if ! directory_exists "/${LIBDIR}"; then
-  echo "Creating $LIBDIR on board"
-  mpremote mkdir "${LIBDIR}"
+if ! directory_exists "/${PROJECT_DIR}"; then
+  echo "Creating $PROJECT_DIR on board"
+  mpremote mkdir "${PROJECT_DIR}"
 fi
 
-if ! directory_exists "/${LIBDIR}/${PKGDIR}"; then
-  echo "Creating $LIBDIR/$PKGDIR on board"
-  mpremote mkdir "/${LIBDIR}/${PKGDIR}"
+if ! directory_exists "/${PROJECT_DIR}/${PKGDIR}"; then
+  echo "Creating $PROJECT_DIR/$PKGDIR on board"
+  mpremote mkdir "/${PROJECT_DIR}/${PKGDIR}"
 fi
 
 
@@ -87,19 +75,17 @@ if [ "$1" = "mpy" ]; then
   echo ".py files will be compiled to .mpy"
 fi
 
-existing_files=$(mpremote fs ls ":/${LIBDIR}/${PKGDIR}")
+existing_files=$(mpremote fs ls ":/${PROJECT_DIR}/${PKGDIR}")
 
 for filename in $SRCDIR/*; do
     f_name=`basename $filename`
     source_extension="${f_name##*.}"
     destination_extension=$source_extension
 
-    # If examples are distributed within the package
-    # ensures they are copied but not compiled to .mpy
     if [[ -d $filename && "$f_name" == "examples" ]]; then
-      if ! directory_exists "/${LIBDIR}/${PKGDIR}/examples"; then
-        echo "Creating $LIBDIR/$PKGDIR/examples on board"
-        mpremote mkdir "/${LIBDIR}/${PKGDIR}/examples"
+      if ! directory_exists "/${PROJECT_DIR}/${PKGDIR}/examples"; then
+        echo "Creating $PROJECT_DIR/$PKGDIR/examples on board"
+        mpremote mkdir "/${PROJECT_DIR}/${PKGDIR}/examples"
       fi
 
       for example_file in $filename/*; do
@@ -108,14 +94,14 @@ for filename in $SRCDIR/*; do
         example_destination_extension=$example_source_extension
 
         if [[ $existing_files == *"${example_f_name%.*}.$example_source_extension"* ]]; then
-          delete_file ":/${LIBDIR}/$PKGDIR/examples/${example_f_name%.*}.$example_source_extension"
+          delete_file ":/${PROJECT_DIR}/$PKGDIR/examples/${example_f_name%.*}.$example_source_extension"
         fi
 
         if [ "$example_source_extension" = "py" ] && [[ $existing_files == *"${example_f_name%.*}.mpy"* ]]; then
-          delete_file ":/${LIBDIR}/$PKGDIR/examples/${example_f_name%.*}.mpy"
+          delete_file ":/${PROJECT_DIR}/$PKGDIR/examples/${example_f_name%.*}.mpy"
         fi
 
-        copy_file $filename/${example_f_name%.*}.$example_destination_extension ":/${LIBDIR}/$PKGDIR/examples/${example_f_name%.*}.$example_destination_extension"
+        copy_file $filename/${example_f_name%.*}.$example_destination_extension ":/${PROJECT_DIR}/$PKGDIR/examples/${example_f_name%.*}.$example_destination_extension"
       done
       continue
     fi
@@ -128,16 +114,16 @@ for filename in $SRCDIR/*; do
     
     # Make sure previous versions of the given file are deleted.
     if [[ $existing_files == *"${f_name%.*}.$source_extension"* ]]; then
-      delete_file ":/${LIBDIR}/$PKGDIR/${f_name%.*}.$source_extension"
+      delete_file ":/${PROJECT_DIR}/$PKGDIR/${f_name%.*}.$source_extension"
     fi
 
     # Check if source file has a .py extension and if a .mpy file exists on the board
     if [ "$source_extension" = "py" ] && [[ $existing_files == *"${f_name%.*}.mpy"* ]]; then
-      delete_file ":/${LIBDIR}/$PKGDIR/${f_name%.*}.mpy"
+      delete_file ":/${PROJECT_DIR}/$PKGDIR/${f_name%.*}.mpy"
     fi
 
     # Copy either the .py or .mpy file to the board depending on the chosen option
-    copy_file $SRCDIR/${f_name%.*}.$destination_extension ":/${LIBDIR}/$PKGDIR/${f_name%.*}.$destination_extension"
+    copy_file $SRCDIR/${f_name%.*}.$destination_extension ":/${PROJECT_DIR}/$PKGDIR/${f_name%.*}.$destination_extension"
 done
 
 if [ "$ext" == "mpy" ]; then

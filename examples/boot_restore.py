@@ -9,11 +9,6 @@
 # A return value of None will be ignored, while a string will be used
 # to enter the project with that name, in this case 'app_launcher'.
 
-__author__ = "ubi de feo"
-__license__ = "MPL 2.0"
-__version__ = "0.4.0"
-__maintainer__ = "ubi de feo [github.com/ubidefeo]"
-
 from machine import Pin
 restore_pin = Pin('D2', Pin.IN, Pin.PULL_UP)
 restore_target_project = 'app_launcher'

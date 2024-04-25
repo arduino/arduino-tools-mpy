@@ -3,6 +3,7 @@
     ["arduino_tools/__init__.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/__init__.py"],
     ["arduino_tools/amp_settings.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/amp_settings.py"],
     ["arduino_tools/common.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/common.py"],
+    ["arduino_tools/constants.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/constants.py"],
     ["arduino_tools/files.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/files.py"],
     ["arduino_tools/helpers.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/helpers.py"],
     ["arduino_tools/loader.py", "github:arduino/arduino/arduino-tools-mpy/arduino_tools/loader.py"],
