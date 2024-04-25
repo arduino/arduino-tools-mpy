@@ -1,41 +1,79 @@
-__author__ = "ubi de feo"
-__license__ = "MPL 2.0"
-__version__ = "0.4.0"
-__maintainer__ = "ubi de feo [github.com/ubidefeo]"
-
-from os import stat, ilistdir, chdir
+import os
 from sys import path
-
-PROJECTS_ROOT = '/'
-PROJECT_PREFIX = 'amp_'
-BOOT_FILE = 'boot.py'
-CONFIG_FILE = 'boot.cfg'
-MAIN_FILE = 'main.py'
-PROJECT_SETTINGS = 'app.json'
-PROJECTS_FW_NAME = 'AMP'
-TOOLS_VERSION = '0.4.0'
+from .constants import *
 
 def validate_project(project_name):
   project_folder = PROJECT_PREFIX + project_name.replace(PROJECT_PREFIX, '')
-  try:
-    main_file = open(PROJECTS_ROOT + project_folder + '/main.py', 'r')
-    settings = open(PROJECTS_ROOT + project_folder + '/' + PROJECT_SETTINGS, 'r')
-  except OSError as e:
+  main_file_path = PROJECTS_ROOT + project_folder + '/main.py'
+  settings_file_path = PROJECTS_ROOT + project_folder + '/' + PROJECT_SETTINGS
+  if fs_item_exists(main_file_path) and fs_item_exists(settings_file_path):
+    return True
+  else:
     return False
-  return True
 
 
+def default_project(p = None, fall_back = None):
+  f'''
+  Displays or sets the default project to run on board startup or reset,
+  immediately after {BOOT_FILE} has finished execution
+
+  default_project('')             > no default project: if there is a {MAIN_FILE} in root it will be run
+  default_project('some_project') > the {MAIN_FILE} file in /amp_some_project will run after {BOOT_FILE}
+
+  default_project()               > returns the default project if set
+
+  Note: a default project is not mandatory. See list_projects()
+  '''
+  default_p = '' if p == None else p
+  if p != None:
+    if (not validate_project(default_p)) and default_p != '':
+      return(OSError(9, f'Project {default_p} does not exist'))
+    a_cfg = open(PROJECTS_ROOT + CONFIG_FILE, 'w')
+    a_cfg.write(default_p)
+    if fall_back != None:
+      a_cfg.write('\n')
+      a_cfg.write(fall_back)
+    a_cfg.close()
+    # if default_p == '':
+    #   disable_amp()
+    
+  else:
+    if fs_item_exists(PROJECTS_ROOT + CONFIG_FILE):
+      a_cfg = open(PROJECTS_ROOT + CONFIG_FILE, 'r')
+      default_p = a_cfg.readline().strip()
+    else:
+      default_p = None
+    return default_p if default_p != None else None
+
+
+# cycles through all the projects: resournce consuming
+# def get_project(project_name):  
+#   for project in get_projects():
+#     if project['name'] == project_name:
+#       return project
+#   return None
+
+# more targeted approach
 def get_project(project_name):  
-  for project in get_projects():
-    if project['name'] == project_name:
-      return project
-  return None
-
+  if validate_project(project_name):
+    project_folder = PROJECT_PREFIX + project_name.replace(PROJECT_PREFIX, '')
+    prj_dict = {
+      'name': '',
+      'path': '',
+      'hidden': False
+    }
+    prj_dict['name'] = project_folder.replace('amp_', '')
+    prj_dict['path'] = PROJECTS_ROOT + project_folder
+    if fs_item_exists(PROJECTS_ROOT + project_folder + '/.hidden'):
+      prj_dict['hidden'] = True
+    return prj_dict
+  else:
+    return None
 
 def get_projects(root_folder = '/'):
-  for fs_item in ilistdir(root_folder):
+  for fs_item in os.ilistdir(root_folder):
     fs_item_name = fs_item[0]
-    if fs_item[0][0:len(PROJECT_PREFIX)] != PROJECT_PREFIX:
+    if fs_item_name[0:len(PROJECT_PREFIX)] != PROJECT_PREFIX:
       continue
     if validate_project(fs_item_name):
       prj_dict = {
@@ -53,7 +91,7 @@ def get_projects(root_folder = '/'):
 
 def fs_item_exists(path):
   try:
-    stat(path)
+    os.stat(path)
     return True
   except OSError as e:
     return False

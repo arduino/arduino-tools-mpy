@@ -1,8 +1,6 @@
-__author__ = "ubi de feo"
-__license__ = "MPL 2.0"
-__version__ = "0.4.0"
-__maintainer__ = "ubi de feo [github.com/ubidefeo]"
-
+from sys import path as sys_path
+import os
+from .constants import *
 from .common import *
 
 try:
@@ -11,11 +9,13 @@ try:
 except ImportError:
   restore_available = False
 
+default_path = sys_path.copy()
+
 def enter_default_project():
   if restore_available and restore_target():
     enter_project(restore_target())
-    return True
-  
+    return None
+
   if fs_item_exists(PROJECTS_ROOT + CONFIG_FILE):
     a_cfg = open(PROJECTS_ROOT + CONFIG_FILE, 'r')
     default_p = a_cfg.readline().strip()
@@ -26,18 +26,28 @@ def enter_default_project():
       a_cfg.write(reboot_to)
       a_cfg.close()
     return enter_project(default_p)
-  return False
-  
+
+  return None
+
 
 def enter_project(project_name):
-  project = get_project(project_name) if validate_project(project_name) else None
+  # project = get_project(project_name) if validate_project(project_name) else None
+  project = get_project(project_name)
   if project == None:
-    return False
-  path.remove('.frozen')
-  path.remove('/lib')
-  path.append(project['path'] + '/lib')
-  path.append('/lib')
-  path.append('.frozen')
-  chdir(project['path'])
+    return None
+  
+  # Try to remove the default local path
+  # which will be added back later as the first element
+  try:
+    sys_path.remove('')
+  except ValueError:
+    pass
+  sys_path.insert(0, project['path'] + '/lib')
+  sys_path.insert(0, '')
+  os.chdir(project['path'])
   return True
 
+def restore_path():
+  global sys_path
+  sys_path = default_path.copy()
+  os.chdir('/')

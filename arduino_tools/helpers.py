@@ -1,12 +1,8 @@
-__author__ = "ubi de feo"
-__license__ = "MPL 2.0"
-__version__ = "0.4.0"
-__maintainer__ = "ubi de feo [github.com/ubidefeo]"
-
-from .common import *
 from hashlib import sha256
-from .files import *
 import os
+from .common import *
+from .files import *
+
 
 # Hashing Helpers
 def hash_generator(path):
@@ -54,12 +50,15 @@ def fs_getpath():
   return os.getcwd()
 
 
-def delete_fs_item(fs_path, is_folder = False, test = False):
+def delete_fs_item(fs_path, is_folder = False):
   print('deleting', 'folder:' if is_folder else 'file:', fs_path)
-  if test: 
-    return
   if is_folder:
-    os.rmdir(fs_path)
+    # this could be replaced by another call to delete_folder(fs_path)
+    try:
+      os.rmdir(fs_path)
+    except OSError as e:
+      if e.errno == 39:
+        print('folder not empty')
   else:
     os.remove(fs_path)
 
@@ -75,15 +74,15 @@ def read_file(path):
 
 
 def is_directory(path):
-  return True if stat(path)[0] == 0x4000 else False
+  return True if os.stat(path)[0] == 0x4000 else False
 
 
 def file_tree_generator(folder_path, depth=0):
   try:
     os.listdir(folder_path)
   except OSError as err:
-      print('path not existing')
-      return False
+    print('path not existing')
+    return False
   for itm in os.ilistdir(folder_path):
     item_path = folder_path + '/' + itm[0]
     item_path = item_path.replace('//', '/')
@@ -94,14 +93,20 @@ def file_tree_generator(folder_path, depth=0):
   yield depth, True, folder_path
 
 
-def list_tree(path = '.'):
+def get_directory_tree(path = '.'):
+  tree_list = []
   if path in ('', '.'):
     path = os.getcwd()
   for depth, is_folder, file_path in file_tree_generator(path):
     if file_path in ('.', os.getcwd()):
       continue
     file_name = file_path.split('/')[len(file_path.split('/'))-1]
-    print(f'{'d'if is_folder else 'f'}: {file_path}')
+    tree_list.insert(0, (depth, file_path, file_name, is_folder))
+  return tree_list
+
+
+def print_tree(path = '.'):
+  print(get_directory_tree(path))
 
 
 def delete_folder(path = '.', force_confirm = 'n'):
@@ -135,4 +140,4 @@ def show_commands():
   with open(f'{get_module_path()}/help.txt', 'r') as help_file:
     for line in help_file.readlines():
       print(line, end = '')
-    help_file.close()
+

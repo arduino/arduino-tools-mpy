@@ -1,9 +1,5 @@
-__author__ = "ubi de feo"
-__license__ = "MPL 2.0"
-__version__ = "0.4.0"
-__maintainer__ = "ubi de feo [github.com/ubidefeo]"
-
 from time import time
+import os
 
 def get_template_path(file_name):
   return '/'.join(__file__.split('/')[:-1]) + f'/{file_name}'
@@ -32,7 +28,8 @@ def new_file_from_source(file_name = None, destination_path = '.', overwrite = F
     file_name = 'main'
   new_sketch_path = f'{destination_path}/{file_name}.py'
   try:
-    open(new_sketch_path, 'r')
+    # open(new_sketch_path, 'r')
+    os.stat(new_sketch_path)
     if not overwrite:
       file_name = f'{file_name}_{time()}'
   except OSError:
@@ -48,7 +45,6 @@ def new_file_from_source(file_name = None, destination_path = '.', overwrite = F
     while sketch_line is not '':
       sketch_line = template_sketch.readline()
       f.write(sketch_line)
-  f.close()
   template_sketch.close()
   return new_sketch_path
 

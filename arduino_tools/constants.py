@@ -1,0 +1,8 @@
+PROJECTS_ROOT = '/'
+PROJECT_PREFIX = 'amp_'
+BOOT_FILE = 'boot.py'
+CONFIG_FILE = 'boot.cfg'
+MAIN_FILE = 'main.py'
+PROJECT_SETTINGS = 'app.json'
+PROJECTS_FRAMEWORK_NAME = 'AMP'
+TOOLS_VERSION = '0.4.0'

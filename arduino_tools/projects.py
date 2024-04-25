@@ -1,8 +1,3 @@
-__author__ = "ubi de feo"
-__license__ = "MPL 2.0"
-__version__ = "0.4.0"
-__maintainer__ = "ubi de feo [github.com/ubidefeo]"
-
 from .common import *
 from .amp_settings import *
 from .files import *
@@ -63,39 +58,45 @@ def enable_amp():
     config_file.close()
 
 
-def disable_amp(force_delete_boot = 'N'):
+def disable_amp(force_delete_boot = False):
   fs_root()
   if fs_item_exists(BOOT_BACKUP_FILE):
     os.rename(BOOT_BACKUP_FILE, BOOT_FILE)
   else:
     show_cursor(False)
-    if force_delete_boot == 'N':
+    if not force_delete_boot:
       choice = input(f'''
 This operation will delete {BOOT_FILE} from your board.
 You can choose to:
-A - Create a default one
+A - Create plain {BOOT_FILE}
 B - No {BOOT_FILE}
-C - Cancel\n''').strip() or 'C'
+C - Do nothing\n''').strip() or 'C'
       choice = choice.upper()
     else:
       choice = 'B'
-      
+
     if choice == 'A':
       create_plain_boot()
     if choice == 'B':
       if fs_item_exists(f'/{BOOT_FILE}'):
         os.remove(f'/{BOOT_FILE}')
+
+    if choice == 'A' or choice == 'B':
+      show_cursor()
+      return True
+    
     show_cursor()
-    print(f'{PROJECTS_FW_NAME} still enabled')
+    print(f'{PROJECTS_FRAMEWORK_NAME} still enabled')
+    return False
 
 def install_package(package = None, project = None, url = None):
-  destination_path = '/lib'
+  lib_install_path = '/lib'
   if project:
-    destination_path = get_project(project)['path'] + destination_path
+    lib_install_path = get_project(project)['path'] + lib_install_path
   if not url:
-    mip.install(package, target=destination_path)
+    mip.install(package, target=lib_install_path)
   else:
-    mip.install(url, target=destination_path) 
+    mip.install(url, target=lib_install_path) 
 
 
 # Managing projects
@@ -135,7 +136,6 @@ def create_project(project_name = None, set_default = False, hidden = False):
   return md
 
 
-
 def set_project_visibility(project_name, visible = True):
   if not validate_project(project_name):
     print(f'project {project_name} does not exist')
@@ -157,40 +157,6 @@ def hide_project(project_name = None):
 
 def unhide_project(project_name = None):
   return(set_project_visibility(project_name, True))
-
-
-def default_project(p = None, fall_back = None):
-  f'''
-  Displays or sets the default project to run on board startup or reset,
-  immediately after {BOOT_FILE} has finished execution
-
-  default_project('')             > no default project: if there is a {MAIN_FILE} in root it will be run
-  default_project('some_project') > the {MAIN_FILE} file in /amp_some_project will run after {BOOT_FILE}
-
-  default_project()               > returns the default project if set
-
-  Note: a default project is not mandatory. See list_projects()
-  '''
-  default_p = '' if p == None else p
-  if p != None:
-    if (not validate_project(default_p)) and default_p != '':
-      return(OSError(9, f'Project {default_p} does not exist'))
-    a_cfg = open(PROJECTS_ROOT + CONFIG_FILE, 'w')
-    a_cfg.write(default_p)
-    if fall_back != None:
-      a_cfg.write('\n')
-      a_cfg.write(fall_back)
-    a_cfg.close()
-    # if default_p == '':
-    #   disable_amp()
-    
-  else:
-    if fs_item_exists(PROJECTS_ROOT + CONFIG_FILE):
-      a_cfg = open(PROJECTS_ROOT + CONFIG_FILE, 'r')
-      default_p = a_cfg.readline().strip()
-    else:
-      default_p = None
-    return default_p if default_p != None else None
 
 
 def delete_project(project_name = None, force_confirm = False):
@@ -266,7 +232,7 @@ def expand_project(archive_path = None, force_overwrite = False):
   return True
 
 
-def get_project_setting(project_name, key = None):
+def get_project_settings(project_name, key = None):
   if not validate_project(project_name):
     print(f'{project_name} is not a valid project')
     return
@@ -276,14 +242,12 @@ def get_project_setting(project_name, key = None):
   md = app_settings.copy()
   for k, v in meta_json.items():
     md[k] = v
-  if key == None:
-    return md
-  else:
-    return md[key]
+  return md
 
 
-def get_project_settings(project_name):
-  return get_project_setting(project_name)
+def get_project_setting(project_name, key):
+  project_settings = get_project_settings(project_name)
+  return project_settings[key]
 
 
 def set_project_settings(project_name, required = [], **keys):
@@ -313,7 +277,6 @@ def list_projects(return_list = False, include_hidden = False):
     if project['hidden'] and not include_hidden:
       continue
     project['default'] = (default_project() == project['name'])
-    
     if return_list:
       projects_list.append(project.copy())
     else:
