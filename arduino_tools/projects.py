@@ -5,7 +5,7 @@ from .loader import *
 from .helpers import *
 
 import os
-import mip
+
 import json
 from time import time
 from machine import soft_reset
@@ -27,6 +27,13 @@ if NETWORK_UPDATE:
     import mrequests
   except ImportError:
     print('Install mrequests')
+
+try:
+  import mip
+  MIP_SUPPORT = True
+except ImportError:
+  MIP_SUPPORT = False
+
 
 # THE FOLLOWING METHODS ARE IMPORTED FROM THE
 # COMMON/LOADER MODULE TO AVOID CODE DUPLICATION.
@@ -90,6 +97,9 @@ C - Do nothing\n''').strip() or 'C'
     return False
 
 def install_package(package = None, project = None, url = None):
+  if not MIP_SUPPORT:
+    print('mip not supported')
+    return False
   lib_install_path = '/lib'
   if project:
     lib_install_path = get_project(project)['path'] + lib_install_path
