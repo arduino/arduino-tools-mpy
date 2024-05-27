@@ -3,6 +3,9 @@ from .projects import get_project_settings
 import network
 import binascii
 import time
+import json
+
+NETWORK_CONFIG_FILE = 'network_config.json'
 
 network_if = network.WLAN(network.STA_IF)
 
@@ -41,6 +44,13 @@ def connect(ssid = '', pwd = '', interface = network.WLAN(network.STA_IF), timeo
       print(f'DNS: {network_details[3]}')
     else:
       print(f'Connection to {ssid} failed')
+
+def read_network_config():
+  try:
+    with open(NETWORK_CONFIG_FILE, 'r') as f:
+      return json.load(f)
+  except OSError as e:
+    return None
 
 # WIP
 def check_for_update(project_name):

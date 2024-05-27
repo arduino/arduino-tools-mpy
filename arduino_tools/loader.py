@@ -16,13 +16,13 @@ def enter_default_project():
     enter_project(restore_target())
     return None
 
-  if fs_item_exists(PROJECTS_ROOT + CONFIG_FILE):
-    a_cfg = open(PROJECTS_ROOT + CONFIG_FILE, 'r')
+  if fs_item_exists(PROJECTS_ROOT + BOOT_CONFIG_FILE):
+    a_cfg = open(PROJECTS_ROOT + BOOT_CONFIG_FILE, 'r')
     default_p = a_cfg.readline().strip()
     reboot_to = a_cfg.readline().strip()
     a_cfg.close()
     if reboot_to != '':
-      a_cfg = open(PROJECTS_ROOT + CONFIG_FILE, 'w')
+      a_cfg = open(PROJECTS_ROOT + BOOT_CONFIG_FILE, 'w')
       a_cfg.write(reboot_to)
       a_cfg.close()
     return enter_project(default_p)

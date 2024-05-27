@@ -60,8 +60,8 @@ def enable_amp():
     return None
 
   # create boot config file
-  if not fs_item_exists(CONFIG_FILE):
-    config_file = open(CONFIG_FILE, 'w')
+  if not fs_item_exists(BOOT_CONFIG_FILE):
+    config_file = open(BOOT_CONFIG_FILE, 'w')
     config_file.close()
 
 

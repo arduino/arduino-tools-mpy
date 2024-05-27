@@ -28,7 +28,7 @@ def default_project(p = None, fall_back = None):
   if p != None:
     if (not validate_project(default_p)) and default_p != '':
       return(OSError(9, f'Project {default_p} does not exist'))
-    a_cfg = open(PROJECTS_ROOT + CONFIG_FILE, 'w')
+    a_cfg = open(PROJECTS_ROOT + BOOT_BOOT_CONFIG_FILE, 'w')
     a_cfg.write(default_p)
     if fall_back != None:
       a_cfg.write('\n')
@@ -38,8 +38,8 @@ def default_project(p = None, fall_back = None):
     #   disable_amp()
     
   else:
-    if fs_item_exists(PROJECTS_ROOT + CONFIG_FILE):
-      a_cfg = open(PROJECTS_ROOT + CONFIG_FILE, 'r')
+    if fs_item_exists(PROJECTS_ROOT + BOOT_CONFIG_FILE):
+      a_cfg = open(PROJECTS_ROOT + BOOT_CONFIG_FILE, 'r')
       default_p = a_cfg.readline().strip()
     else:
       default_p = None
