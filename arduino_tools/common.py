@@ -28,7 +28,7 @@ def default_project(p = None, fall_back = None):
   if p != None:
     if (not validate_project(default_p)) and default_p != '':
       return(OSError(9, f'Project {default_p} does not exist'))
-    a_cfg = open(PROJECTS_ROOT + BOOT_BOOT_CONFIG_FILE, 'w')
+    a_cfg = open(PROJECTS_ROOT + BOOT_CONFIG_FILE, 'w')
     a_cfg.write(default_p)
     if fall_back != None:
       a_cfg.write('\n')
