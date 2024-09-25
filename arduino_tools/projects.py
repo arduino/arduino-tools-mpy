@@ -112,7 +112,7 @@ def install_package(package = None, project = None, url = None):
 
 # Managing projects
 
-def create_project(project_name = None, set_default = False, hidden = False):
+def create_project(project_name = None, set_default = False, hidden = False, friendly_name = None):
   p_name = project_name or 'untitled'
   p_name = "".join(c for c in p_name if c.isalpha() or c.isdigit() or c==' ' or c == '_').rstrip()
   p_name = p_name.replace(' ', '_')
@@ -134,10 +134,15 @@ def create_project(project_name = None, set_default = False, hidden = False):
 
   md = app_settings.copy()
   md['name'] = p_name
+  if friendly_name:
+    md['friendly_name'] = friendly_name
+    set_friendly_name(p_name, friendly_name)
+  
   md['amp_version'] = TOOLS_VERSION
   with open(f'{project_path}/{PROJECT_SETTINGS}', 'w') as config_file:
     json.dump(md, config_file)
     config_file.close()
+
 
   if hidden:
     hide_project(p_name)
@@ -147,16 +152,25 @@ def create_project(project_name = None, set_default = False, hidden = False):
   return md
 
 
+def set_friendly_name(project_name, friendly_name):
+  if not validate_project(project_name):
+    print(f'{project_name} is not a valid project')
+    return
+  with open(get_project(project_name)['path']+'/'+PROJECT_FRIENDLY_NAME_FILE, 'w') as friendly_name_file:
+    friendly_name_file.write(friendly_name)
+    friendly_name_file.close()
+  set_project_settings(project_name, friendly_name = friendly_name)
+
 def set_project_visibility(project_name, visible = True):
   if not validate_project(project_name):
     print(f'project {project_name} does not exist')
     return False
   project_path = f'{PROJECTS_ROOT}amp_{project_name}'
   if visible:
-    if fs_item_exists(f'{project_path}/.hidden'):
-      os.remove(f'{project_path}/.hidden')
+    if fs_item_exists(f'{project_path}/{PROJECT_HIDDEN_FILE}'):
+      os.remove(f'{project_path}/{PROJECT_HIDDEN_FILE}')
   else:
-    hidden_file = open(f'{project_path}/.hidden', 'w')
+    hidden_file = open(f'{project_path}/{PROJECT_HIDDEN_FILE}', 'w')
     hidden_file.write('# this project is hidden')
     hidden_file.close()
   return True
@@ -275,7 +289,7 @@ def get_project_setting(project_name, key):
   return project_settings[key]
 
 
-def set_project_settings(project_name, required = [], **keys):
+def set_project_settings(project_name, **keys):
   if not validate_project(project_name) :
     print(f'{project_name} is not a valid project')
     return
@@ -289,12 +303,19 @@ def set_project_settings(project_name, required = [], **keys):
   md.update(local_settings)
   for key, value in keys.items():
     md[key] = value
-  if len(required) > 0:
-    md['required'] = required
+  
   j_file = open(get_project(project_name)['path']+'/'+PROJECT_SETTINGS, 'w')
   json.dump(md, j_file)
   j_file.close()
 
+# PLACE-HOLDER
+# this method will allow us to define which settings are required for this project
+# might turn useful for internet connection details, etc.
+def set_required_project_settings(project_name, **keys):
+  if not validate_project(project_name) :
+    print(f'{project_name} is not a valid project')
+    return
+  
 
 def list_projects(return_list = False, include_hidden = False):
   projects_list = []

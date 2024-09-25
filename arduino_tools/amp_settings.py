@@ -2,6 +2,7 @@ from collections import OrderedDict
 
 app_settings = OrderedDict({
                       "name": "",
+                      "friendly_name": "",
                       "author": "", 
                       "created": 0, 
                       "modified": 0, 

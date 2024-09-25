@@ -78,12 +78,19 @@ def get_projects(root_folder = '/'):
     if validate_project(fs_item_name):
       prj_dict = {
         'name': '',
+        'friendly_name': '',
         'path': '',
         'hidden': False
       }
       # project_name = fs_item_name.replace('amp_', '')
       prj_dict['name'] = fs_item_name.replace('amp_', '')
       prj_dict['path'] = PROJECTS_ROOT + fs_item_name
+      try:
+        friendly_name = open(PROJECTS_ROOT + fs_item_name + '/' + PROJECT_FRIENDLY_NAME_FILE, 'r').read()
+      except:
+        friendly_name = ''
+      
+      prj_dict['friendly_name'] = prj_dict['name'] if friendly_name == '' else friendly_name
       if fs_item_exists(PROJECTS_ROOT + fs_item_name + '/.hidden'):
         prj_dict['hidden'] = True
       yield prj_dict
