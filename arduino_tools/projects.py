@@ -7,8 +7,7 @@ from .helpers import *
 import os
 
 import json
-from time import time
-from machine import soft_reset
+from time import time as tm
 
 try:
   import tarfile
@@ -27,6 +26,7 @@ if NETWORK_UPDATE:
     import mrequests
   except ImportError:
     print('Install mrequests')
+    print('https://github.com/SpotlightKid/mrequests')
 
 try:
   import mip
@@ -45,7 +45,8 @@ except ImportError:
 # get_projects(root_folder = '/', debug = False)
 
 BOOT_BACKUP_FILE = 'boot_backup.py'
-EXPORT_FOLDER = f'{PROJECT_PREFIX}exports'
+EXPORT_FOLDER = f'__{PROJECT_PREFIX}exports'
+BACKUP_FOLDER = f'__{PROJECT_PREFIX}backups'
 
 
 def enable_amp():
@@ -197,7 +198,7 @@ def export_project(project_name = None):
       os.mkdir(export_folder)
     exported_file_path = f'{export_folder}/{project_name}.tar'
     if fs_item_exists(exported_file_path):
-      exported_file_path = f'{export_folder}/{project_name}_{time()}.tar'
+      exported_file_path = f'{export_folder}/{project_name}_{tm()}.tar'
     
     archive = tarfile.TarFile(exported_file_path, 'w')
     project_folder = PROJECT_PREFIX + project_name
@@ -210,6 +211,12 @@ def export_project(project_name = None):
 
 
 def expand_project(archive_path = None, force_overwrite = False):
+
+  backup_folder = f'{PROJECTS_ROOT}{BACKUP_FOLDER}'
+  if not fs_item_exists(backup_folder):
+    os.mkdir(backup_folder)
+    
+
   if not fs_item_exists(archive_path):
     print(f'Project archive {archive_path} does not exist')
     return False
@@ -217,16 +224,23 @@ def expand_project(archive_path = None, force_overwrite = False):
     archive_file = tarfile.TarFile(archive_path, 'r')
     os.chdir(PROJECTS_ROOT)
     first_tar_item = True
-    confirm_delete = 'n'
+    confirm_delete_backup = 'n'
+    confirm_overwrite = 'n'
     for item in archive_file:
       if item.type == tarfile.DIRTYPE:
         if first_tar_item:
           amp_name = item.name.strip('/')
-          amp_backup_folder = amp_name+'_'+str(time())
+          amp_backup_folder = amp_name+'_'+str(tm())
+          backup_project_path = f'{backup_folder}/{amp_name}'
+          if fs_item_exists(backup_project_path):
+            backup_project_path = f'{backup_folder}/{amp_name}_{tm()}'
+
           if fs_item_exists(item.name.strip('/')):
-            confirm_delete = input(f'are you sure you want to overwrite {amp_name}? [Y/n]') if not force_overwrite else 'Y'
-            if confirm_delete == 'Y':
-              os.rename(amp_name, amp_backup_folder)
+            confirm_overwrite = input(f'Do you want to overwrite {amp_name}? [Y/n]: ') if not force_overwrite else 'Y'
+            if confirm_overwrite == 'Y':
+              print('Backing up existing project to', amp_backup_folder)
+              # os.rename(amp_name, amp_backup_folder)
+              os.rename(amp_name, backup_project_path)
             else:
               print('Operation canceled.')
               return
@@ -236,8 +250,9 @@ def expand_project(archive_path = None, force_overwrite = False):
         with open(item.name, "wb") as of:
           of.write(f.read())
       first_tar_item = False
-    if confirm_delete == 'Y':
-      delete_folder(amp_backup_folder, 'Y')
+    confirm_delete_backup = input(f'Delete backup folder {amp_backup_folder}? [Y/n]: ') if not force_overwrite else 'Y'
+    if confirm_delete_backup == 'Y':
+      delete_folder(backup_project_path, 'Y')
     os.remove(archive_path)
   return True
 
