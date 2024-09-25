@@ -1,4 +1,4 @@
-from time import time
+from time import time as tm
 import os
 
 def get_template_path(file_name):
@@ -31,7 +31,7 @@ def new_file_from_source(file_name = None, destination_path = '.', overwrite = F
     # open(new_sketch_path, 'r')
     os.stat(new_sketch_path)
     if not overwrite:
-      file_name = f'{file_name}_{time()}'
+      file_name = f'{file_name}_{tm()}'
   except OSError:
     pass
   
