@@ -4,9 +4,11 @@ from .constants import *
 
 def validate_project(project_name):
   project_folder = PROJECT_PREFIX + project_name.replace(PROJECT_PREFIX, '')
-  main_file_path = PROJECTS_ROOT + project_folder + '/main.py'
+  main_py_path = PROJECTS_ROOT + project_folder + '/main.py'
+  main_mpy_path = PROJECTS_ROOT + project_folder + '/main.mpy'
+  verify_main = fs_item_exists(main_py_path) or fs_item_exists(main_mpy_path)
   settings_file_path = PROJECTS_ROOT + project_folder + '/' + PROJECT_SETTINGS
-  if fs_item_exists(main_file_path) and fs_item_exists(settings_file_path):
+  if verify_main and fs_item_exists(settings_file_path):
     return True
   else:
     return False
