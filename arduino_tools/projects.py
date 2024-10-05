@@ -3,6 +3,7 @@ from .amp_settings import *
 from .files import *
 from .loader import *
 from .helpers import *
+import errno
 
 import os
 
@@ -117,7 +118,7 @@ def create_project(project_name = None, set_default = False, hidden = False, fri
   p_name = "".join(c for c in p_name if c.isalpha() or c.isdigit() or c==' ' or c == '_').rstrip()
   p_name = p_name.replace(' ', '_')
   if validate_project(project_name):
-    return None
+    return(OSError(errno.EEXIST, f'Project {project_name} already exists'))
   project_path = f'{PROJECTS_ROOT}amp_{p_name}'
 
   # create project's folders
@@ -136,14 +137,15 @@ def create_project(project_name = None, set_default = False, hidden = False, fri
   md['name'] = p_name
   if friendly_name:
     md['friendly_name'] = friendly_name
-    set_friendly_name(p_name, friendly_name)
+
   
   md['amp_version'] = TOOLS_VERSION
   with open(f'{project_path}/{PROJECT_SETTINGS}', 'w') as config_file:
     json.dump(md, config_file)
     config_file.close()
 
-
+  if friendly_name:
+    set_friendly_name(p_name, friendly_name)
   if hidden:
     hide_project(p_name)
 
@@ -175,14 +177,21 @@ def set_project_visibility(project_name, visible = True):
     hidden_file.close()
   return True
 
+def hide_app(app_name = None):
+  return hide_project(app_name)
 
 def hide_project(project_name = None):
   return(set_project_visibility(project_name, False))
 
+def unhide_app(app_name = None):
+  return unhide_project(app_name)
 
 def unhide_project(project_name = None):
   return(set_project_visibility(project_name, True))
 
+
+def delete_app(app_name = None, force_confirm = False):
+  return delete_project(app_name, force_confirm)
 
 def delete_project(project_name = None, force_confirm = False):
   project_name = project_name.replace(PROJECT_PREFIX, '')
@@ -219,9 +228,9 @@ def export_project(project_name = None):
     project_path = f'{PROJECTS_ROOT}{project_folder}'
     archive.add(project_path)
     archive.close()
-    print(f'project {project_name} archived at {exported_file_path}')
-    return True
-  return False
+    # print(f'project {project_name} archived at {exported_file_path}')
+    return exported_file_path
+  return(OSError(errno.EINVAL, f'{project_name} is not a valid project'))
 
 
 def expand_project(archive_path = None, force_overwrite = False):

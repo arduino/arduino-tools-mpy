@@ -49,7 +49,7 @@ delete_folder('{folder path}', [force_confirm = 'n']):
   Will attempt to delete the folder and all its content recursively.
   If force_confirm is set to True it will not ask for confirmation at each file/folder.
 
-list_tree('{folder path}'):
+list_directory('{folder path}'):
   [helper] Will recursively list through the path specified, indicationg if the item is a directory (d:) or a file (f:)
 
 fs_root():

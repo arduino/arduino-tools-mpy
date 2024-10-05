@@ -105,7 +105,7 @@ def get_directory_tree(path = '.'):
   return tree_list
 
 
-def print_tree(path = '.'):
+def list_directory(path = '.'):
   print(get_directory_tree(path))
 
 
