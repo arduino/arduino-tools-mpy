@@ -90,6 +90,7 @@ function copy_file {
   if [ $? -ne 0 ]; then
     echo "Error: $error"
   fi
+  echo -ne "\r\033[2K"
   echo -e "\r√ $output"
 }
 
@@ -104,6 +105,7 @@ function delete_file {
   if [ $? -ne 0 ]; then
     echo "Error: $error"
   fi
+  echo -ne "\r\033[2K"
   echo -e "\r√ $output"
 }
 
@@ -115,6 +117,7 @@ function create_folder {
   if [ $? -ne 0 ]; then
     echo "Error: $error"
   fi
+  echo -ne "\r\033[2K"
   echo -e "\r√ $output_msg"
 }
 
@@ -122,7 +125,12 @@ function delete_folder {
   output_msg="Deleting $1 on board"
   echo -n "$output_msg"
   delete_folder="${PYTHON_HELPERS}delete_folder(\"/$1\")"
-  mpremote exec "$delete_folder"
+  error=$(mpremote exec "$delete_folder")
+  # Print error message if return code is not 0
+  if [ $? -ne 0 ]; then
+    echo "Error: $error"
+  fi
+  echo -ne "\r\033[2K"
   echo -e "\r√ $output_msg"
 }
 
@@ -167,6 +175,7 @@ function install_package {
           delete_folder="${PYTHON_HELPERS}delete_folder(\"${LIBDIR}/${PKGDIR}\")"
           mpremote exec "$delete_folder"
         fi
+        echo -ne "\r\033[2K"
         echo -e "\r√ $output_msg"
         create_folder "$LIBDIR/$PKGDIR"
       fi
