@@ -10,17 +10,7 @@ import os
 import json
 from time import time as tm
 
-try:
-  import tarfile
-except ImportError:
-  print('Install tarfile-write')
 
-try:
-  import network
-  NETWORK_UPDATE = True
-  from .amp_network import *
-except ImportError:
-  NETWORK_UPDATE = False
 
 if NETWORK_UPDATE:
   try:

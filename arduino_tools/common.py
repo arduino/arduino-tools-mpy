@@ -2,6 +2,19 @@ import os
 from sys import path
 from .constants import *
 
+try:
+  import tarfile
+  from tarfile import write
+  ALLOW_EXPORT = True
+except ImportError as e:
+  ALLOW_EXPORT = False
+
+try:
+  import network
+  NETWORK_UPDATE = True
+except ImportError:
+  NETWORK_UPDATE = False
+
 def validate_project(project_name):
   project_folder = PROJECT_PREFIX + project_name.replace(PROJECT_PREFIX, '')
   main_py_path = PROJECTS_ROOT + project_folder + '/main.py'
