@@ -1,49 +1,49 @@
 enable_amp():
-  Enable support for Arduino MicroPython Projects (AMP).
+  Enable support for Arduino MicroPython apps (AMP).
 
 disable_amp():
   Disable support for AMP.
 
-create_project('{project name}', set_default = False, hidden = False):
-  Creates a project with the given name. No special characters allowed. Spaces will be converted to '_'
-  Setting the project as default will make it run at boot/reset.
-  Making the project hidden will prevent its listing.
+create_app('{app name}', set_default = False, hidden = False):
+  Creates a app with the given name. No special characters allowed. Spaces will be converted to '_'
+  Setting the app as default will make it run at boot/reset.
+  Making the app hidden will prevent its listing.
   Useful for launchers and other management utilities not to be messed with.
 
-delete_project([force_confirm = 'n']):
-  Deletes the project with the given name.
+delete_app([force_confirm = 'n']):
+  Deletes the app with the given name.
   If force_confirm is set to 'Y' no confirmation will be required to delete the whole tree.
 
-hide_project('{project name}'):
-  Will set the project to hidden.
+hide_app('{app name}'):
+  Will set the app to hidden.
 
-unhide_project('{project name}'):
-  Will set the project to visible.
+unhide_app('{app name}'):
+  Will set the app to visible.
 
-list_projects(return_list = False, include_hidden = False): [REPL/interactive]
-  Interactively list projects in REPL unless return_list is True.
-  Hidden projects are excluded by default.
+list_apps(return_list = False, include_hidden = False): [REPL/interactive]
+  Interactively list apps in REPL unless return_list is True.
+  Hidden apps are excluded by default.
 
-get_projects_list(include_hidden = False)
-  Returns an Array of projects and some basic info:
+get_apps_list(include_hidden = False)
+  Returns an Array of apps and some basic info:
   Path, name, default, hidden.
-  Hidden projects are excluded by default.
+  Hidden apps are excluded by default.
 
-default_project():
-  Displays the project currently set as default (if any)
+default_app():
+  Displays the app currently set as default (if any)
 
-default_project('{project name}', fall_back = None):
-  If project name is '' (empty string), no default will be set.
-  If fall_back is set (and is a valid project), at the next reset/boot that will become the default project to run.
+default_app('{app name}', fall_back = None):
+  If app name is '' (empty string), no default will be set.
+  If fall_back is set (and is a valid app), at the next reset/boot that will become the default app to run.
 
-export_project('{project name}'):
-  Creates a .tar archive of the project with the given name if valid.
-  The archive file will be named appending a timestamp to the project name.
+export_app('{app name}'):
+  Creates a .tar archive of the app with the given name if valid.
+  The archive file will be named appending a timestamp to the app name.
   The archive will be saved in '/amp_exports/filename.tar'
 
-expand_project('{archive path}', force_overwrite = False):
-  Expands the .tar archive into a project folder.
-  Requires confirmation if project exists unless force_overwrite is True.
+expand_app('{archive path}', force_overwrite = False):
+  Expands the .tar archive into a app folder.
+  Requires confirmation if app exists unless force_overwrite is True.
 
 delete_folder('{folder path}', [force_confirm = 'n']):
   Will attempt to delete the folder and all its content recursively.

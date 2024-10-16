@@ -1,5 +1,5 @@
 from .common import *
-from .projects import get_project_settings
+from .apps import get_app_properties
 import network
 import binascii
 import time
@@ -53,10 +53,10 @@ def read_network_config():
     return None
 
 # WIP
-def check_for_update(project_name):
-  if not validate_project(project_name):
-    print(f'{project_name} is not valid or does not exist')
+def check_for_update(app_name):
+  if not validate_app(app_name):
+    print(f'App {app_name} is not valid or does not exist')
     return
-  p_data = get_project_settings(project_name)
+  p_data = get_app_properties(app_name)
   
 

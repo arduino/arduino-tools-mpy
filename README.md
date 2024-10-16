@@ -5,8 +5,8 @@ A set of tools and helpers to implement, create and manage MicroPython Projects/
 A new approach to enabling a MicroPython board to host/store multiple projects with the choice of running one as default, as well as have a mechanism of fallback to a default launcher.
 It does not interfere with the canonical `boot.py`  > `main.py` run paradigm, and allows users to easily activate this functionality on top of any stock MicroPython file-system.
 
-The Arduino MicroPython Projects framework relies on the creation of well structured projects enclosed in their own folders named "amp_{project-name}", which in turn contain a set of files (`main.py`, `lib/`, `app.json`, etc.).
-These are the conditions for a project to be considered "valid".
+The Arduino MicroPython Projects framework relies on the creation of well structured projects/apps enclosed in their own folders named "app_{app-name}", which in turn contain a set of files (`main.py`, `lib/`, `app.json`, etc.).
+These are the conditions for a project/app to be considered "valid".
 Other files can be added to user's discretion, for instance to store assets or log/save data.
 
 The framework exploits the standard behaviour of MicroPython at start/reset/soft-reset:
@@ -17,20 +17,20 @@ The framework exploits the standard behaviour of MicroPython at start/reset/soft
 The framework's boot.py only requires two lines for the following operations:
 
 - import the minimum required parts of arduino_tools (common) from the board's FileSystem (preferrably installed as a module in /lib/arduino_tools)
-- call a method to enter the default project's path and apply some temporary settings to configure the running environment (search paths and launch configuration changes) which will be reset at the next start.
+- call a method to enter the default app's path and apply some temporary settings to configure the running environment (search paths and launch configuration changes) which will be reset at the next start.
 
-If no default project is set, it will fall back to the `main.py` in the board's root if present.
+If no default app is set, it will fall back to the `main.py` in the board's root if present.
 No error condition will be generated, as MicroPython is capable of handling the absence of `boot.py` and/or `main.py`.
 
-If a default project is set, the `enter_default_project()` will issue an `os.chdir()` command and enter the project's folder.
+If a default app is set, the `enter_default_app()` will issue an `os.chdir()` command and enter the app's folder.
 MicroPython will automatically run the main.py it finds in its Current Working Directory.
 
 **NOTES:**
 
-- each project can contain a `.hidden` file that will hide the project from AMP, effectively preventing listing or deletion.
-The `list_projects()` command accepts a `skip_hidden = False` parameter to return every project, not just the visible ones.
+- each app can contain a `.hidden` file that will hide the app from AMP, effectively preventing listing or deletion.
+The `list_apps()` command accepts a `skip_hidden = False` parameter to return every app, not just the visible ones.
 
-- each project should contain a metadata file named `app.json`
+- each app should contain a metadata file named `app.json`
   {
     "name": "",
     "author": "",
@@ -38,12 +38,12 @@ The `list_projects()` command accepts a `skip_hidden = False` parameter to retur
     "modified": 0,
     "version": "x.y.z",
     "origin_url": "",  
-    "amp_version": "x.y.z"
+    "tools_version": "x.y.z"
   }
-- while some fields should be mandatory ("name", "hidden") others could not be a requirement, especially for students projects who do not care about versions or source URL.
+- while some fields should be mandatory ("name", "hidden") others could not be a requirement, especially for students apps who do not care about versions or source URL.
 We should also handle if extra fields are added not to break legacy
 
-- AMP can replace/update a project with the content of a `.tar` archive.
+- AMP can replace/update an app with the content of a `.tar` archive.
 This is useful for updating versions of apps/launcher/demos.
 An app launcher could be delegated to checking for available updates to any of the other apps it manages.
 
@@ -58,13 +58,13 @@ Best practice is to copy all the files in the board's `/lib/arduino_tools`, whic
 Enter a REPL session
 
 ```python
-from arduino_tools.projects import *
+from arduino_tools.apps import *
 show_commands()
 ```
 
 read through the commands to know more.
 
-To enable the projects framework run
+To enable the apps framework run
 `enable_amp()`
 
 The current `boot.py` (if present) will be backed up to `boot_backup.py`.
@@ -82,41 +82,43 @@ C - Do nothing (default)
 
 unless `disable_amp('Y')` is invoked, which will force the choice to be B.
 
-Setting the default project to '' (default_project('')) will also generate a choice menu.
+Setting the default app to '' (default_app('')) will also generate a choice menu.
 
 The above behaviour is the result of Q&A sessions with other MicroPython developers and might be subject to change until a v1.0.0 is released.
 
 ## Basic usage
 
-Enable AMP and create a few projects
+Note: creating an app and giving it a name with unallowed characters will replace them with an underscore (`_`).
+
+Enable AMP and create a few apps
 
 ```python
->>> from arduino_tools.projects import *
+>>> from arduino_tools.apps import *
 >>> enable_amp()
 
->>> create_project('abc')
->>> create_project('def')
->>> create_project('ghi')
->>> create_project('new project')
+>>> create_app('abc')
+>>> create_app('def')
+>>> create_app('ghi')
+>>> create_app('new app') # space will be converted to _
 
->>> list_projects()
+>>> list_apps()
   abc
   def
   ghi
-  new_project
+  new_app
 
->>> default_project()
+>>> default_app()
 ''
 
->>> default_project('def')
->>> default_project()
+>>> default_app('def')
+>>> default_app()
 'def'
 
 >>> import machine
 >>> machine.soft_reset
 
 MPY: soft reboot
-Hello from project def
+Hello, I am an app and my name is def
 MicroPython v1.23.0-preview.138.gdef6ad474 on 2024-02-16; Arduino Nano ESP32 with ESP32S3
 Type "help()" for more information.
 >>> 

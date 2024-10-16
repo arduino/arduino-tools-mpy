@@ -15,35 +15,34 @@ try:
 except ImportError:
   NETWORK_UPDATE = False
 
-def validate_project(project_name):
-  project_folder = PROJECT_PREFIX + project_name.replace(PROJECT_PREFIX, '')
-  main_py_path = PROJECTS_ROOT + project_folder + '/main.py'
-  main_mpy_path = PROJECTS_ROOT + project_folder + '/main.mpy'
+def validate_app(app_name):
+  app_folder = APP_PREFIX + app_name.replace(APP_PREFIX, '')
+  main_py_path = APPS_ROOT + app_folder + '/main.py'
+  main_mpy_path = APPS_ROOT + app_folder + '/main.mpy'
   verify_main = fs_item_exists(main_py_path) or fs_item_exists(main_mpy_path)
-  settings_file_path = PROJECTS_ROOT + project_folder + '/' + PROJECT_SETTINGS
-  if verify_main and fs_item_exists(settings_file_path):
+  properties_file_path = APPS_ROOT + app_folder + '/' + APP_PROPERTIES
+  if verify_main and fs_item_exists(properties_file_path):
     return True
   else:
     return False
 
-
-def default_project(p = None, fall_back = None):
+def default_app(p = None, fall_back = None):
   f'''
-  Displays or sets the default project to run on board startup or reset,
+  Displays or sets the default app to run on board startup or reset,
   immediately after {BOOT_FILE} has finished execution
 
-  default_project('')             > no default project: if there is a {MAIN_FILE} in root it will be run
-  default_project('some_project') > the {MAIN_FILE} file in /amp_some_project will run after {BOOT_FILE}
+  default_app('')             > no default app: if there is a {MAIN_FILE} in root it will be run
+  default_app('some_app') > the {MAIN_FILE} file in /app_some_app will run after {BOOT_FILE}
 
-  default_project()               > returns the default project if set
+  default_app()               > returns the default app if set
 
-  Note: a default project is not mandatory. See list_projects()
+  Note: a default app is not mandatory. See list_apps()
   '''
   default_p = '' if p == None else p
   if p != None:
-    if (not validate_project(default_p)) and default_p != '':
+    if (not validate_app(default_p)) and default_p != '':
       return(OSError(9, f'Project {default_p} does not exist'))
-    a_cfg = open(PROJECTS_ROOT + BOOT_CONFIG_FILE, 'w')
+    a_cfg = open(APPS_ROOT + BOOT_CONFIG_FILE, 'w')
     a_cfg.write(default_p)
     if fall_back != None:
       a_cfg.write('\n')
@@ -53,60 +52,52 @@ def default_project(p = None, fall_back = None):
     #   disable_amp()
     
   else:
-    if fs_item_exists(PROJECTS_ROOT + BOOT_CONFIG_FILE):
-      a_cfg = open(PROJECTS_ROOT + BOOT_CONFIG_FILE, 'r')
+    if fs_item_exists(APPS_ROOT + BOOT_CONFIG_FILE):
+      a_cfg = open(APPS_ROOT + BOOT_CONFIG_FILE, 'r')
       default_p = a_cfg.readline().strip()
     else:
       default_p = None
     return default_p if default_p != None else None
 
-
-# cycles through all the projects: resournce consuming
-# def get_project(project_name):  
-#   for project in get_projects():
-#     if project['name'] == project_name:
-#       return project
-#   return None
-
 # more targeted approach
-def get_project(project_name):  
-  if validate_project(project_name):
-    project_folder = PROJECT_PREFIX + project_name.replace(PROJECT_PREFIX, '')
+def get_app(app_name):  
+  if validate_app(app_name):
+    app_folder = APP_PREFIX + app_name.replace(APP_PREFIX, '')
     prj_dict = {
       'name': '',
       'path': '',
       'hidden': False
     }
-    prj_dict['name'] = project_folder.replace('amp_', '')
-    prj_dict['path'] = PROJECTS_ROOT + project_folder
-    if fs_item_exists(PROJECTS_ROOT + project_folder + '/.hidden'):
+    prj_dict['name'] = app_folder.replace(APP_PREFIX, '')
+    prj_dict['path'] = APPS_ROOT + app_folder
+    if fs_item_exists(APPS_ROOT + app_folder + '/.hidden'):
       prj_dict['hidden'] = True
     return prj_dict
   else:
     return None
 
-def get_projects(root_folder = '/'):
+def get_apps(root_folder = '/'):
   for fs_item in os.ilistdir(root_folder):
     fs_item_name = fs_item[0]
-    if fs_item_name[0:len(PROJECT_PREFIX)] != PROJECT_PREFIX:
+    if fs_item_name[0:len(APP_PREFIX)] != APP_PREFIX:
       continue
-    if validate_project(fs_item_name):
+    if validate_app(fs_item_name):
       prj_dict = {
         'name': '',
         'friendly_name': '',
         'path': '',
         'hidden': False
       }
-      # project_name = fs_item_name.replace('amp_', '')
-      prj_dict['name'] = fs_item_name.replace('amp_', '')
-      prj_dict['path'] = PROJECTS_ROOT + fs_item_name
+      # app_name = fs_item_name.replace('app_', '')
+      prj_dict['name'] = fs_item_name.replace('app_', '')
+      prj_dict['path'] = APPS_ROOT + fs_item_name
       try:
-        friendly_name = open(PROJECTS_ROOT + fs_item_name + '/' + PROJECT_FRIENDLY_NAME_FILE, 'r').read()
+        friendly_name = open(APPS_ROOT + fs_item_name + '/' + APP_FRIENDLY_NAME_FILE, 'r').read()
       except:
         friendly_name = ''
       
       prj_dict['friendly_name'] = prj_dict['name'] if friendly_name == '' else friendly_name
-      if fs_item_exists(PROJECTS_ROOT + fs_item_name + '/.hidden'):
+      if fs_item_exists(APPS_ROOT + fs_item_name + '/.hidden'):
         prj_dict['hidden'] = True
       yield prj_dict
 
