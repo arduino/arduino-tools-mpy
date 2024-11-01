@@ -6,6 +6,8 @@ def get_template_path(file_name):
 
 
 def template_to_file(template_name, destination_file, **variables):
+  for k, v in variables.items():
+    print(f'{k}: {v}')
   template_path = get_template_path(template_name)
   try:
     input_template = open(get_template_path(template_name), 'r')

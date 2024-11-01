@@ -33,8 +33,8 @@
       "github:arduino/arduino/arduino-tools-mpy/arduino_tools/network.py"
     ],
     [
-      "arduino_tools/projects.py",
-      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/projects.py"
+      "arduino_tools/apps.py",
+      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/apps.py"
     ],
     [
       "arduino_tools/help.txt",

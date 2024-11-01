@@ -1,5 +1,6 @@
-from arduino_tools.common import validate_app, get_app
-from arduino_tools.properties import get_app_properties, update_app_properties
+from .loader import enter_app
+from .common import validate_app
+from .properties import get_app_properties, update_app_properties
 
 import os
 
@@ -10,7 +11,7 @@ class App:
     if not validate_app(app_name):
       raise ValueError('Invalid app')
     self.properties = get_app_properties(app_name)
-    os.chdir(get_app(app_name)['path'])
+    enter_app(app_name)
   
   def get_property(self, property):
     return self.properties.get(property)

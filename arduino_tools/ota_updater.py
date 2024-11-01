@@ -1,12 +1,26 @@
+# ABSOLUTELY WORK IN PROGRESS
+# BROKEN PIECE OF... CODE
+# HERE JUST AS A PLACEHOLDER
+# GO AWAY, SHOO!
+# THIS IS NOT THE FILE YOU ARE LOOKING FOR
+# MOVE ALONG
+
 """Example of how to download a file in chunk using a pre-allcoated buffer
 and print download progress."""
 
-from arduino_tools.apps import *
+from .apps import *
 import sys
 import mrequests
 
 buf = bytearray(1024)
 
+
+if NETWORK_UPDATE:
+  try:
+    import mrequests
+  except ImportError:
+    print('Install mrequests')
+    print('https://github.com/SpotlightKid/mrequests')
 
 class ResponseWithProgress(mrequests.Response):
     _total_read = 0
@@ -47,13 +61,3 @@ def ota_get(url, file_path):
 
 ota_url = get_app_properties('ubi_ota', 'origin_url')
 ota_get(ota_url, '/ubi_ota.tar')
-# expand_project()
-# r = mrequests.get(url, headers={b"accept": b"image/png"}, response_class=ResponseWithProgress)
-
-# if r.status_code == 200:
-#     r.save(filename, buf=buf)
-#     print("Image saved to '{}'.".format(filename))
-# else:
-#     print("Request failed. Status: {}".format(r.status_code))
-
-# r.close()

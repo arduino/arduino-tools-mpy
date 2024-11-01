@@ -10,14 +10,6 @@ import os
 import json
 from time import time as tm
 
-
-if NETWORK_UPDATE:
-  try:
-    import mrequests
-  except ImportError:
-    print('Install mrequests')
-    print('https://github.com/SpotlightKid/mrequests')
-
 try:
   import mip
   MIP_SUPPORT = True
@@ -117,7 +109,7 @@ def create_app(app_name = None, friendly_name = None, set_default = False, hidde
   os.mkdir(app_path + '/lib')
   app_friendly_name = friendly_name or a_name
   # create app's main from template
-  success, message, exception = template_to_file('main.tpl', f'{app_path}/{MAIN_FILE}', app_name = app_friendly_name)
+  success, message, exception = template_to_file('main.tpl', f'{app_path}/{MAIN_FILE}', app_name = a_name, app_friendly_name = app_friendly_name)
   if not success:
     print(f'Error creating {MAIN_FILE}: {message}')
     return None

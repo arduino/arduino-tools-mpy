@@ -29,7 +29,7 @@ def version_to_number(ver_str):
 # MicroPython Helpers
 def create_plain_boot():
   # create project's main from template
-  success, message, exception = template_to_file('boot_plain.tpl', f'{PROJECTS_ROOT}/{BOOT_FILE}')
+  success, message, exception = template_to_file('boot_plain.tpl', f'{APPS_ROOT}/{BOOT_FILE}')
   if not success:
     print(f'Error creating {BOOT_FILE}: {message}')
     return None
