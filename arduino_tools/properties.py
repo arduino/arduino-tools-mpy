@@ -18,9 +18,8 @@ def get_app_properties(app_name, key = None):
     print(f'{app_name} is not a valid project')
     return
   project_path = get_app(app_name)['path']
-  json_file = open(project_path+'/' + APP_PROPERTIES, 'r')
-  loaded_properties = json.load(json_file)
-  json_file.close()
+  with open(project_path+'/' + APP_PROPERTIES, 'r') as json_file:
+    loaded_properties = json.load(json_file)
   updated_data = app_properties_template.copy()
   for k, v in loaded_properties.items():
     updated_data[k] = v
@@ -38,8 +37,8 @@ def update_app_properties(app_name, properties = {}):
     return
   app_json_path = get_app(app_name)['path'] + '/' + APP_PROPERTIES
   if fs_item_exists(app_json_path):
-    json_file = open(app_json_path, 'r')
-    loaded_properties = json.load(json_file)
+    with open(app_json_path, 'r') as json_file:
+      loaded_properties = json.load(json_file)
   else:
     loaded_properties = {}
   updated_data = app_properties_template.copy()
@@ -47,9 +46,8 @@ def update_app_properties(app_name, properties = {}):
   for key, value in properties.items():
     updated_data[key] = value
   
-  json_file = open(get_app(app_name)['path'] + '/' + APP_PROPERTIES, 'w')
-  json.dump(updated_data, json_file)
-  json_file.close()
+  with open(get_app(app_name)['path'] + '/' + APP_PROPERTIES, 'w') as json_file
+    json.dump(updated_data, json_file)
 
 def set_app_properties(app_name, **keys):
   if not validate_app(app_name) :

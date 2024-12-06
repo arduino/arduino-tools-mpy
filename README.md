@@ -1,11 +1,11 @@
 # Arduino Tools for MicroPython
 
-A set of tools and helpers to implement, create and manage MicroPython Projects/Apps.
+A set of tools and helpers to implement, create and manage MicroPython Apps.
 
 A new approach to enabling a MicroPython board to host/store multiple projects with the choice of running one as default, as well as have a mechanism of fallback to a default launcher.
 It does not interfere with the canonical `boot.py`  > `main.py` run paradigm, and allows users to easily activate this functionality on top of any stock MicroPython file-system.
 
-The Arduino MicroPython Projects framework relies on the creation of well structured projects/apps enclosed in their own folders named "app_{app-name}", which in turn contain a set of files (`main.py`, `lib/`, `app.json`, etc.).
+The Arduino MicroPython App framework relies on the creation of well structured projects/apps enclosed in their own folders named "app_{app-name}", which in turn contain a set of files (`main.py`, `lib/`, `app.json`, etc.).
 These are the conditions for a project/app to be considered "valid".
 Other files can be added to user's discretion, for instance to store assets or log/save data.
 
@@ -71,6 +71,7 @@ The current `boot.py` (if present) will be backed up to `boot_backup.py`.
 Any other file, including the `main.py` in the root (if present), will remain untouched.
 
 `disable_amp()` will restore boot.py from boot_backup.py if it was previously created.
+The method accepts a parameter `force_delete_boot` which defaults to `False`
 
 If no backup file will be found it will ask the following:
 
@@ -80,7 +81,7 @@ A - Create a default one
 B - Proceed to delete
 C - Do nothing (default)
 
-unless `disable_amp('Y')` is invoked, which will force the choice to be B.
+unless `disable_amp(True)` is invoked, which will force the choice to be B.
 
 Setting the default app to '' (default_app('')) will also generate a choice menu.
 
@@ -100,12 +101,16 @@ Enable AMP and create a few apps
 >>> create_app('def')
 >>> create_app('ghi')
 >>> create_app('new app') # space will be converted to _
+>>> create_app('friendly_name', 'App friendly name') # This name will be sanitised and used as a human-readable one
+
 
 >>> list_apps()
   abc
   def
   ghi
   new_app
+  friendly_name
+
 
 >>> default_app()
 ''

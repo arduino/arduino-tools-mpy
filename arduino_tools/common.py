@@ -42,19 +42,18 @@ def default_app(p = None, fall_back = None):
   if p != None:
     if (not validate_app(default_p)) and default_p != '':
       return(OSError(9, f'Project {default_p} does not exist'))
-    a_cfg = open(APPS_ROOT + BOOT_CONFIG_FILE, 'w')
-    a_cfg.write(default_p)
-    if fall_back != None:
-      a_cfg.write('\n')
-      a_cfg.write(fall_back)
-    a_cfg.close()
+    with open(APPS_ROOT + BOOT_CONFIG_FILE, 'w') as a_cfg:
+      a_cfg.write(default_p)
+      if fall_back != None:
+        a_cfg.write('\n')
+        a_cfg.write(fall_back)
     # if default_p == '':
     #   disable_amp()
     
   else:
     if fs_item_exists(APPS_ROOT + BOOT_CONFIG_FILE):
-      a_cfg = open(APPS_ROOT + BOOT_CONFIG_FILE, 'r')
-      default_p = a_cfg.readline().strip()
+      with open(APPS_ROOT + BOOT_CONFIG_FILE, 'r') as a_cfg:
+        default_p = a_cfg.readline().strip()
     else:
       default_p = None
     return default_p if default_p != None else None
@@ -92,7 +91,8 @@ def get_apps(root_folder = '/'):
       prj_dict['name'] = fs_item_name.replace('app_', '')
       prj_dict['path'] = APPS_ROOT + fs_item_name
       try:
-        friendly_name = open(APPS_ROOT + fs_item_name + '/' + APP_FRIENDLY_NAME_FILE, 'r').read()
+        with open(APPS_ROOT + fs_item_name + '/' + APP_FRIENDLY_NAME_FILE, 'r') as friendly_name_file:
+          friendly_name = friendly_name_file.read()
       except:
         friendly_name = ''
       

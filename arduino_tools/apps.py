@@ -141,7 +141,6 @@ def set_friendly_name(app_name, friendly_name):
     return
   with open(get_app(app_name)['path']+'/'+APP_FRIENDLY_NAME_FILE, 'w') as friendly_name_file:
     friendly_name_file.write(friendly_name)
-    friendly_name_file.close()
   set_app_properties(app_name, friendly_name = friendly_name)
 
 def set_app_visibility(app_name, visible = True):
@@ -153,9 +152,8 @@ def set_app_visibility(app_name, visible = True):
     if fs_item_exists(f'{app_path}/{APP_HIDDEN_FILE}'):
       os.remove(f'{app_path}/{APP_HIDDEN_FILE}')
   else:
-    hidden_file = open(f'{app_path}/{APP_HIDDEN_FILE}', 'w')
-    hidden_file.write('# this app is hidden')
-    hidden_file.close()
+    with open(f'{app_path}/{APP_HIDDEN_FILE}', 'w') as hidden_file:
+      hidden_file.write('# this app is hidden')
   return True
 
 def hide_app(app_name = None):

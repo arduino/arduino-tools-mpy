@@ -10,15 +10,13 @@ def template_to_file(template_name, destination_file, **variables):
     print(f'{k}: {v}')
   template_path = get_template_path(template_name)
   try:
-    input_template = open(get_template_path(template_name), 'r')
-    input_text = input_template.read().format(**variables)
-    input_template.close()
+    with open(get_template_path(template_name), 'r') as input_template:
+      input_text = input_template.read().format(**variables)
   except OSError as e:
     return False, f'{template_name} not found', e
   try:
-    output_file = open(destination_file, 'w')
-    output_file.write(input_text)
-    output_file.close()
+    with open(destination_file, 'w') as output_file:
+      output_file.write(input_text)
   except OSError as e:
     return False, f'{destination_file} not created', e 
   return True, f'{destination_file} created', None

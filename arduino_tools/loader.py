@@ -17,20 +17,20 @@ def enter_default_app():
     return None
 
   if fs_item_exists(APPS_ROOT + BOOT_CONFIG_FILE):
-    a_cfg = open(APPS_ROOT + BOOT_CONFIG_FILE, 'r')
-    default_p = a_cfg.readline().strip()
-    reboot_to = a_cfg.readline().strip()
-    a_cfg.close()
+    with open(APPS_ROOT + BOOT_CONFIG_FILE, 'r') as a_cfg:
+      default_p = a_cfg.readline().strip()
+      reboot_to = a_cfg.readline().strip()
+    if default_p == '':
+      return None
     if reboot_to != '':
-      a_cfg = open(APPS_ROOT + BOOT_CONFIG_FILE, 'w')
-      a_cfg.write(reboot_to)
-      a_cfg.close()
+      with open(APPS_ROOT + BOOT_CONFIG_FILE, 'w') as a_cfg:
+        g.write(reboot_to)
     return enter_app(default_p)
-
   return None
 
 
 def enter_app(app_name):
+
   app = get_app(app_name)
   if app == None:
     return None

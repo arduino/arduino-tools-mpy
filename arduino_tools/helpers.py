@@ -9,7 +9,6 @@ def hash_generator(path):
   with open(path, 'rb') as file:
     for line in file:
         yield line
-    file.close()
 
 
 def get_hash(file_path):
@@ -69,7 +68,6 @@ def read_file(path):
   with open(path, 'r') as file:
     for line in file.readlines():
       print(line, end = '')
-    file.close()
   print()
 
 
