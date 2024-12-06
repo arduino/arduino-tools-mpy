@@ -55,8 +55,8 @@ def set_app_properties(app_name, **keys):
     return
   app_json_path = get_app(app_name)['path'] + '/' + APP_PROPERTIES
   if fs_item_exists(app_json_path):
-    json_file = open(app_json_path, 'r')
-    loaded_properties = json.load(json_file)
+    with open(app_json_path, 'r') as json_file:
+      loaded_properties = json.load(json_file)
   else:
     loaded_properties = {}
   updated_data = app_properties_template.copy()
@@ -64,6 +64,6 @@ def set_app_properties(app_name, **keys):
   for key, value in keys.items():
     updated_data[key] = value
   
-  json_file = open(get_app(app_name)['path'] + '/' + APP_PROPERTIES, 'w')
-  json.dump(updated_data, json_file)
-  json_file.close()
+  with open(get_app(app_name)['path'] + '/' + APP_PROPERTIES, 'w') as json_file:
+    json.dump(updated_data, json_file)
+  
