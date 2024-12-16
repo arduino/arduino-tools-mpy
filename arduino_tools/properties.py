@@ -46,7 +46,7 @@ def update_app_properties(app_name, properties = {}):
   for key, value in properties.items():
     updated_data[key] = value
   
-  with open(get_app(app_name)['path'] + '/' + APP_PROPERTIES, 'w') as json_file
+  with open(get_app(app_name)['path'] + '/' + APP_PROPERTIES, 'w') as json_file:
     json.dump(updated_data, json_file)
 
 def set_app_properties(app_name, **keys):
