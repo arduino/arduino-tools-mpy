@@ -24,7 +24,7 @@ def enter_default_app():
       return None
     if reboot_to != '':
       with open(APPS_ROOT + BOOT_CONFIG_FILE, 'w') as a_cfg:
-        g.write(reboot_to)
+        a_cfg.write(reboot_to)
     return enter_app(default_p)
   return None
 
