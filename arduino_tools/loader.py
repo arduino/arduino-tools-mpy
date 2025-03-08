@@ -1,4 +1,5 @@
-from sys import path as sys_path
+# from sys import path as sys_path
+import sys
 import os
 from .constants import *
 from .common import *
@@ -9,7 +10,12 @@ try:
 except ImportError:
   restore_available = False
 
-default_path = sys_path.copy()
+default_path = sys.path.copy()
+
+def load_app(app_name = None):
+  if app_name == None:
+    return enter_default_app()
+  return enter_app(app_name)
 
 def enter_default_app():
   if restore_available and restore_target():
@@ -30,23 +36,22 @@ def enter_default_app():
 
 
 def enter_app(app_name):
-
   app = get_app(app_name)
   if app == None:
     return None
   
   # Try to remove the default local path
   # which will be added back later as the first element
+  sys.path = default_path.copy()
   try:
-    sys_path.remove('')
+    sys.path.remove('')
   except ValueError:
     pass
-  sys_path.insert(0, app['path'] + '/lib')
-  sys_path.insert(0, '')
+  sys.path.insert(0, app['path'] + '/lib')
+  sys.path.insert(0, '')
   os.chdir(app['path'])
   return True
 
 def restore_path():
-  global sys_path
-  sys_path = default_path.copy()
+  sys.path = default_path.copy()
   os.chdir('/')

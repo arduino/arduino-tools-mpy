@@ -1,6 +1,8 @@
 import os
-from sys import path
 from .constants import *
+from sys import path as sys_path
+
+APPS_ROOT = '/' # always add trailing '/'
 
 try:
   import tarfile
@@ -47,9 +49,6 @@ def default_app(p = None, fall_back = None):
       if fall_back != None:
         a_cfg.write('\n')
         a_cfg.write(fall_back)
-    # if default_p == '':
-    #   disable_amp()
-    
   else:
     if fs_item_exists(APPS_ROOT + BOOT_CONFIG_FILE):
       with open(APPS_ROOT + BOOT_CONFIG_FILE, 'r') as a_cfg:

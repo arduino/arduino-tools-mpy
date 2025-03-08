@@ -65,12 +65,12 @@ show_commands()
 read through the commands to know more.
 
 To enable the apps framework run
-`enable_amp()`
+`enable_apps()`
 
 The current `boot.py` (if present) will be backed up to `boot_backup.py`.
 Any other file, including the `main.py` in the root (if present), will remain untouched.
 
-`disable_amp()` will restore boot.py from boot_backup.py if it was previously created.
+`disable_apps()` will restore boot.py from boot_backup.py if it was previously created.
 The method accepts a parameter `force_delete_boot` which defaults to `False`
 
 If no backup file will be found it will ask the following:
@@ -81,7 +81,7 @@ A - Create a default one
 B - Proceed to delete
 C - Do nothing (default)
 
-unless `disable_amp(True)` is invoked, which will force the choice to be B.
+unless `disable_apps(True)` is invoked, which will force the choice to be B.
 
 Setting the default app to '' (default_app('')) will also generate a choice menu.
 
@@ -95,7 +95,7 @@ Enable AMP and create a few apps
 
 ```python
 >>> from arduino_tools.apps import *
->>> enable_amp()
+>>> enable_apps()
 
 >>> create_app('abc')
 >>> create_app('def')

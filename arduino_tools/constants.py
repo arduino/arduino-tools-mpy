@@ -1,4 +1,3 @@
-APPS_ROOT = '/' # always add trailing '/'
 APP_PREFIX = 'app_'
 BOOT_FILE = 'boot.py'
 BOOT_CONFIG_FILE = 'boot.cfg'

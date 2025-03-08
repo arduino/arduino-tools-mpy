@@ -1,8 +1,8 @@
-enable_amp():
-  Enable support for Arduino MicroPython apps (AMP).
+enable_apps():
+  Enable support for Arduino MicroPython Apps.
 
-disable_amp():
-  Disable support for AMP.
+disable_apps():
+  Disable support for Arduino MicroPython Apps.
 
 create_app('{app name}', set_default = False, hidden = False):
   Creates a app with the given name. No special characters allowed. Spaces will be converted to '_'
@@ -41,7 +41,7 @@ export_app('{app name}'):
   The archive file will be named appending a timestamp to the app name.
   The archive will be saved in '/amp_exports/filename.tar'
 
-expand_app('{archive path}', force_overwrite = False):
+import_app('{archive path}', force_overwrite = False):
   Expands the .tar archive into a app folder.
   Requires confirmation if app exists unless force_overwrite is True.
 

@@ -31,13 +31,13 @@ BACKUP_FOLDER = f'__{APP_PREFIX}backups'
 
 app_data_cache = {}
 
-def enable_amp():
+def enable_apps():
   fs_root()
   if fs_item_exists(BOOT_FILE):
     os.rename(BOOT_FILE, BOOT_BACKUP_FILE)
   
   # create bootloader from template
-  success, message, exception = template_to_file('boot_amp.tpl', f'{APPS_ROOT}{BOOT_FILE}')
+  success, message, exception = template_to_file('boot_loader.tpl', f'{APPS_ROOT}{BOOT_FILE}')
   if not success:
     print(f'Error creating {BOOT_FILE}: {message}')
     return None
@@ -48,7 +48,7 @@ def enable_amp():
     config_file.close()
 
 
-def disable_amp(force_delete_boot = False):
+def disable_apps(force_delete_boot = False):
   fs_root()
   if fs_item_exists(BOOT_BACKUP_FILE):
     os.rename(BOOT_BACKUP_FILE, BOOT_FILE)
@@ -206,7 +206,7 @@ def export_app(app_name = None):
   return(OSError(errno.EINVAL, f'{app_name} is not a valid app'))
 
 
-def expand_app(archive_path = None, force_overwrite = False):
+def import_app(archive_path = None, force_overwrite = False):
 
   backup_folder = f'{APPS_ROOT}{BACKUP_FOLDER}'
   if not fs_item_exists(backup_folder):

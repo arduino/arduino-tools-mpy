@@ -1,7 +1,6 @@
-from .loader import enter_app
 from .common import validate_app
+from .loader import enter_app
 from .properties import get_app_properties, update_app_properties
-
 import os
 
 class App:
@@ -11,7 +10,8 @@ class App:
     if not validate_app(app_name):
       raise ValueError('Invalid app')
     self.properties = get_app_properties(app_name)
-    enter_app(app_name)
+    if os.getcwd() != self.get_path():
+      enter_app(app_name)
   
   def get_property(self, property):
     return self.properties.get(property)
@@ -21,3 +21,6 @@ class App:
   
   def save_properties(self):
     update_app_properties(self.app_name, self.properties)
+
+  def get_path(self):
+    return self.get_property('path')  
