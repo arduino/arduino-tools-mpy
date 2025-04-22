@@ -14,8 +14,7 @@
 
 PYTHON_HELPERS='''
 import os
-
-os.chdir("/")
+import sys
 
 def is_directory(path):
   return True if os.stat(path)[0] == 0x4000 else False
@@ -47,6 +46,13 @@ def sys_info():
     import sys
     print(sys.platform, sys.implementation.version)
     
+def get_root(has_flash_mount = True):
+    if "/flash" in sys.path:
+        return "/flash"
+    else:
+        return ""
+
+os.chdir(get_root())
 '''
 
 # Check if device is present/connectable
@@ -147,14 +153,15 @@ function install_package {
   # Source directory for the package on the host
   SRCDIR=`realpath .`
   # Board's library directory
-  LIBDIR="/lib"
-
-  # if directory_exists "${LIBDIR}/${PKGDIR}"; then
-  #   echo "Deleting $LIBDIR/$PKGDIR on board"
-  #   delete_folder="${PYTHON_HELPERS}delete_folder(\"${LIBDIR}/${PKGDIR}\")"
-  #   mpremote exec "$delete_folder"
-  # fi
-  # create_folder "$LIBDIR/$PKGDIR"
+  device_root="${PYTHON_HELPERS}print(get_root())"
+  output=$(mpremote exec "$device_root")
+  output=$(echo "$output" | tr -d '[:space:]')
+  echo "$output"
+  if [ "$output" == "/flash" ]; then
+    echo "Board has root in /flash"
+    # output=""
+  fi
+  LIBDIR="$output/lib"
 
   IFS=$'\n' read -rd '' -a package_files < <(find . -mindepth 1)
   items_count=${#package_files[@]}

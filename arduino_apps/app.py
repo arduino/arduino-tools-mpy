@@ -7,6 +7,7 @@ class App:
   properties = {}
   def __init__(self, app_name):
     self.app_name = app_name
+    self.app_updater = None
     if not validate_app(app_name):
       raise ValueError('Invalid app')
     self.properties = get_app_properties(app_name)
@@ -23,4 +24,10 @@ class App:
     update_app_properties(self.app_name, self.properties)
 
   def get_path(self):
-    return self.get_property('path')  
+    return self.get_property('path')
+
+  def update_app(self):
+    self.app_updater = __import__('arduino_apps.updater')
+    updater = __import__('arduino_apps.updater')
+    updater.updater.check_for_updates(self.app_name)
+    # self.app_updater.check_for_updates(self.app_name)

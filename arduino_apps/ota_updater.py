@@ -5,10 +5,10 @@
 # THIS IS NOT THE FILE YOU ARE LOOKING FOR
 # MOVE ALONG
 
-"""Example of how to download a file in chunk using a pre-allcoated buffer
+"""Example of how to download a file in chunk using a pre-allocated buffer
 and print download progress."""
 
-from .apps import *
+from .manager import *
 import sys
 import mrequests
 
@@ -60,4 +60,4 @@ def ota_get(url, file_path):
 
 
 ota_url = get_app_properties('ubi_ota', 'origin_url')
-ota_get(ota_url, '/ubi_ota.tar')
+# ota_get(ota_url, '/ubi_ota.tar')

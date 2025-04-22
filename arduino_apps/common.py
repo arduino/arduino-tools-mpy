@@ -1,8 +1,14 @@
 import os
 from .constants import *
-from sys import path as sys_path
+import sys
 
-APPS_ROOT = '/' # always add trailing '/'
+def get_root(has_flash_mount = True):
+  if '/flash' in sys.path:
+    return '/flash'
+  else:
+    return ''
+
+APPS_ROOT = get_root() + '/' # always add trailing '/'
 
 try:
   import tarfile

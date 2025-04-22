@@ -4,7 +4,7 @@ from .files import *
 from .loader import *
 from .helpers import *
 import errno
-
+ 
 import os
 
 import json
@@ -16,7 +16,13 @@ try:
 except ImportError:
   MIP_SUPPORT = False
 
+try:
+  import tarfile
 
+except ImportError:
+  print('tarfile not installed')
+  print('install tarfile-write')
+  
 # THE FOLLOWING METHODS ARE IMPORTED FROM THE
 # COMMON/LOADER MODULE TO AVOID CODE DUPLICATION.
 # PATH and PREFIX are defined there as well as
@@ -37,7 +43,7 @@ def enable_apps():
     os.rename(BOOT_FILE, BOOT_BACKUP_FILE)
   
   # create bootloader from template
-  success, message, exception = template_to_file('boot_loader.tpl', f'{APPS_ROOT}{BOOT_FILE}')
+  success, message, exception = template_to_file('boot_apps.tpl', f'{APPS_ROOT}{BOOT_FILE}')
   if not success:
     print(f'Error creating {BOOT_FILE}: {message}')
     return None
@@ -147,6 +153,7 @@ def set_app_visibility(app_name, visible = True):
   if not validate_app(app_name):
     print(f'app {app_name} does not exist')
     return False
+  
   app_path = f'{APPS_ROOT}{APP_PREFIX}{app_name}'
   if visible:
     if fs_item_exists(f'{app_path}/{APP_HIDDEN_FILE}'):

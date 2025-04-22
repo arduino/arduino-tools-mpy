@@ -41,8 +41,8 @@
       "github:arduino/arduino/arduino-tools-mpy/arduino_tools/help.txt"
     ],
     [
-      "arduino_tools/boot_loader.tpl",
-      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/boot_loader.tpl"
+      "arduino_tools/boot_apps.tpl",
+      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/boot_apps.tpl"
     ],
     [
       "arduino_tools/boot_plain.tpl",
