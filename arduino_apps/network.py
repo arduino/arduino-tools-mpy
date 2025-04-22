@@ -1,7 +1,11 @@
+from .common import *
+from .manager import get_app_properties
 import network
 import binascii
 import time
-import sys
+import json
+
+NETWORK_CONFIG_FILE = 'network_config.json'
 
 network_if = network.WLAN(network.STA_IF)
 
@@ -30,6 +34,7 @@ def connect(ssid = '', pwd = '', interface = network.WLAN(network.STA_IF), timeo
     print() 
     print(f'{"C" if interface.isconnected() else "NOT c"}onnected to network')
     if interface.isconnected():
+      print(f'Connected to {ssid}')
       network_details = interface.ifconfig()
       mac_address = binascii.hexlify(interface.config('mac'), ':')
       print(f'MAC: {mac_address}')
@@ -38,12 +43,20 @@ def connect(ssid = '', pwd = '', interface = network.WLAN(network.STA_IF), timeo
       print(f'Gateway: {network_details[2]}')
       print(f'DNS: {network_details[3]}')
     else:
-      sys.exit()
+      print(f'Connection to {ssid} failed')
 
-def check_for_update(project_name):
-  if not validate_project(project_name):
-    print(f'{project_name} is not valid or does not exist')
+def read_network_config():
+  try:
+    with open(NETWORK_CONFIG_FILE, 'r') as f:
+      return json.load(f)
+  except OSError as e:
+    return None
+
+# WIP
+def check_for_update(app_name):
+  if not validate_app(app_name):
+    print(f'App {app_name} is not valid or does not exist')
     return
-  p_meta = get_project_metadata(project_name)
+  p_data = get_app_properties(app_name)
   
 
