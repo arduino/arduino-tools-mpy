@@ -16,7 +16,7 @@ The framework exploits the standard behaviour of MicroPython at start/reset/soft
 
 The framework's boot.py only requires two lines for the following operations:
 
-- import the minimum required parts of arduino_tools (common) from the board's FileSystem (preferrably installed as a module in /lib/arduino_tools)
+- import the minimum required parts of arduino_apps (common) from the board's FileSystem (preferrably installed as a module in /lib/arduino_apps)
 - call a method to enter the default app's path and apply some temporary settings to configure the running environment (search paths and launch configuration changes) which will be reset at the next start.
 
 If no default app is set, it will fall back to the `main.py` in the board's root if present.
@@ -52,13 +52,13 @@ An app launcher could be delegated to checking for available updates to any of t
 **NOTE:** The API is not yet final, hence subject to changes.
 Same goes for the name of the module(s)
 
-The only requirement is that all the files in `arduino_tools` should be transferred to the board using one's preferred method.
-Best practice is to copy all the files in the board's `/lib/arduino_tools`, which is what happens when installing with the `mip` tool.
+The only requirement is that all the files in `arduino_apps` should be transferred to the board using one's preferred method.
+Best practice is to copy all the files in the board's `/lib/arduino_apps`, which is what happens when installing with the `mip` tool.
 
 Enter a REPL session
 
 ```python
-from arduino_tools.apps import *
+from arduino_apps.manager import *
 show_commands()
 ```
 
@@ -94,7 +94,7 @@ Note: creating an app and giving it a name with unallowed characters will replac
 Enable AMP and create a few apps
 
 ```python
->>> from arduino_tools.apps import *
+>>> from arduino_apps.manager import *
 >>> enable_apps()
 
 >>> create_app('abc')
