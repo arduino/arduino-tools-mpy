@@ -1,1 +1,1 @@
-./mpinstall.sh arduino_apps
+./mpinstall.sh arduino_tools

@@ -1,5 +1,5 @@
 from .utils.semver import *
-from arduino_apps.manager import *
+from arduino_apps.apps_manager import *
 import sys
 
 apps = []

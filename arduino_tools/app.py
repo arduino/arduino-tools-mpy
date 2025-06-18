@@ -27,7 +27,7 @@ class App:
     return self.get_property('path')
 
   def update_app(self):
-    self.app_updater = __import__('arduino_apps.updater')
-    updater = __import__('arduino_apps.updater')
+    self.app_updater = __import__('arduino_tools.updater')
+    updater = __import__('arduino_tools.updater')
     updater.updater.check_for_updates(self.app_name)
     # self.app_updater.check_for_updates(self.app_name)
