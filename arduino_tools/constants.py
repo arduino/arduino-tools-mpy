@@ -6,4 +6,4 @@ APP_PROPERTIES = 'app.json'
 APP_FRIENDLY_NAME_FILE = '.friendly_name'
 APP_HIDDEN_FILE = '.hidden'
 APPS_FRAMEWORK_NAME = 'Arduino Apps'
-TOOLS_VERSION = __version__
+TOOLS_VERSION = '0.7.0'

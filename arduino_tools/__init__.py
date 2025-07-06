@@ -1,4 +1,4 @@
-from .constants import *
+from .constants import TOOLS_VERSION
 from .loader import *
 
 __author__ = "Ubi de Feo"
