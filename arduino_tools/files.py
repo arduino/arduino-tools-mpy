@@ -7,16 +7,13 @@ def get_template_path(file_name):
 
 
 def template_to_file(template_name, destination_file, **variables):
-  for k, v in variables.items():
-    print(f'{k}: {v}')
   template_path = get_template_path(template_name)
   try:
-    with open(get_template_path(template_name), 'r') as input_template:
+    with open(template_path, 'r') as input_template:
       input_text = input_template.read().format(**variables)
   except OSError as e:
     return False, f'{template_name} not found', e
   try:
-    print(f'Writing to {destination_file}')
     with open(destination_file, 'w') as output_file:
       output_file.write(input_text)
   except OSError as e:
