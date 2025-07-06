@@ -27,10 +27,6 @@ ONLY for ESP32
 
 NETWORK_CACHE_LIFE = 10
 NETWORK_CONFIG_FILE = f'{get_root()}network_config.json'
-ssid = 'FT Mobile'
-key = 'DonEmilioGatto'
-ap_ssid = 'ArduinoAP'
-ap_key = 'cappuccino'
 
 net_if = None
 

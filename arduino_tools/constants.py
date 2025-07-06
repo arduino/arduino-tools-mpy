@@ -5,5 +5,5 @@ MAIN_FILE = 'main.py'
 APP_PROPERTIES = 'app.json'
 APP_FRIENDLY_NAME_FILE = '.friendly_name'
 APP_HIDDEN_FILE = '.hidden'
-APPS_FRAMEWORK_NAME = 'AMP'
-TOOLS_VERSION = '0.5.0'
+APPS_FRAMEWORK_NAME = 'Arduino Apps'
+TOOLS_VERSION = __version__
