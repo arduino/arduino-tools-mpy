@@ -1,5 +1,5 @@
 from .utils.semver import *
-from arduino_apps.apps_manager import *
+from .apps_manager import *
 import sys
 
 apps = []
@@ -108,23 +108,3 @@ def app_update(app_name, ota_url, updated_version):
         import_app(download_file_path, True)
         return True
     return False
-
-# def app_update(app_name):
-#     properties = get_app_properties(app_name)
-#     ota_url = properties['origin_url']
-#     version = properties['version']
-#     print(ota_url, version)
-#     updated_version = get_updated_version(app_name, ota_url, version)
-#     if updated_version != None:
-#         update_file_name = updated_version['file_name']
-#         update_file_url = f'{ota_url}/{update_file_name}'
-#         try:
-#             os.mkdir('/tmp')
-#         except OSError:
-#             print('/tmp already exists')
-#         download_file_path = f'/tmp/{update_file_name}'
-#         download_success = file_get(update_file_url, download_file_path)
-#         if download_success:
-#           expand_app(download_file_path, True)
-
-# ota_get(ota_url, '/ubi_ota.tar')

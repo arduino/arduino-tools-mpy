@@ -1,5 +1,5 @@
 from .common import *
-from .manager import get_app_properties
+from .properties import get_app_properties
 import network
 import binascii
 import time
