@@ -1,5 +1,12 @@
 # Arduino Tools for MicroPython
 
+This package adds functionalities for
+* MicroPython apps framework
+* file system helpers
+* WiFi network management
+
+
+## MicroPython Apps Framework
 A set of tools and helpers to implement, create and manage MicroPython Apps.
 
 A new approach to enabling a MicroPython board to host/store multiple projects with the choice of running one as default, as well as have a mechanism of fallback to a default launcher.
@@ -47,7 +54,7 @@ We should also handle if extra fields are added not to break legacy
 This is useful for updating versions of apps/launcher/demos.
 An app launcher could be delegated to checking for available updates to any of the other apps it manages.
 
-## How to setup
+### How to setup
 
 **NOTE:** The API is not yet final, hence subject to changes.
 Same goes for the name of the module(s)
@@ -87,13 +94,13 @@ Setting the default app to '' (default_app('')) will also generate a choice menu
 
 The above behaviour is the result of Q&A sessions with other MicroPython developers and might be subject to change until a v1.0.0 is released.
 
-## Basic usage
+### Basic usage
 
 Note: creating an app and giving it a name with unallowed characters will replace them with an underscore (`_`).
 
 Enable AMP and create a few apps
 
-```python
+```shell
 >>> from arduino_tools.app_manager import *
 >>> enable_apps()
 
@@ -128,3 +135,13 @@ MicroPython v1.23.0-preview.138.gdef6ad474 on 2024-02-16; Arduino Nano ESP32 wit
 Type "help()" for more information.
 >>> 
 ```
+
+### Advanced Usage
+
+#### Restore script
+
+The restore script allows to have a way of restoring a default app at boot.
+This script may respond to a hardware condition such as a pressed pin in order to set the default app to run.
+This could be a menu or configuration script.
+Can be used as a fault-recovery method.
+See `generated_example/boot_restore.py`.
