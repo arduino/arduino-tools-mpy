@@ -42,7 +42,7 @@ def get_module_path():
 
 
 def fs_root():
-  os.chdir('/')
+  os.chdir(get_root())
 
 
 def fs_getpath():

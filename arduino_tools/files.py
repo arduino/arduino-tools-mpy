@@ -2,7 +2,8 @@ from time import time as tm
 import os
 
 def get_template_path(file_name):
-  return '/'.join(__file__.split('/')[:-1]) + f'/{file_name}'
+  template_path = '/'.join(__file__.split('/')[:-1]) + f'/{file_name}'
+  return template_path
 
 
 def template_to_file(template_name, destination_file, **variables):
@@ -15,6 +16,7 @@ def template_to_file(template_name, destination_file, **variables):
   except OSError as e:
     return False, f'{template_name} not found', e
   try:
+    print(f'Writing to {destination_file}')
     with open(destination_file, 'w') as output_file:
       output_file.write(input_text)
   except OSError as e:

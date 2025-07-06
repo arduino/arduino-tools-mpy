@@ -4,11 +4,11 @@ import sys
 
 def get_root(has_flash_mount = True):
   if '/flash' in sys.path:
-    return '/flash'
+    return '/flash/'
   else:
-    return ''
+    return '/'
 
-APPS_ROOT = get_root() + '/' # always add trailing '/'
+APPS_ROOT = get_root()
 
 try:
   import tarfile
@@ -80,7 +80,9 @@ def get_app(app_name):
   else:
     return None
 
-def get_apps(root_folder = '/'):
+def get_apps(root_folder = None):
+  if root_folder is None:
+    root_folder = APPS_ROOT
   for fs_item in os.ilistdir(root_folder):
     fs_item_name = fs_item[0]
     if fs_item_name[0:len(APP_PREFIX)] != APP_PREFIX:
