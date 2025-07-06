@@ -164,14 +164,10 @@ def set_app_visibility(app_name, visible = True):
   return True
 
 def hide_app(app_name = None):
-  return hide_app(app_name)
   return(set_app_visibility(app_name, False))
 
 def unhide_app(app_name = None):
   return(set_app_visibility(app_name, True))
-
-def delete_app(app_name = None, force_confirm = False):
-  return delete_app(app_name, force_confirm)
 
 def delete_app(app_name = None, force_confirm = False):
   app_name = app_name.replace(APP_PREFIX, '')
