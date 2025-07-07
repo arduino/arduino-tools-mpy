@@ -22,14 +22,7 @@ try:
 except ImportError:
   print('tarfile not installed')
   print('install tarfile-write')
-  
-# THE FOLLOWING METHODS ARE IMPORTED FROM THE
-# COMMON/LOADER MODULE TO AVOID CODE DUPLICATION.
-# PATH and PREFIX are defined there as well as
-# 
-# default_app(p = None)
-# get_apps()
-# get_apps(root_folder = '/', debug = False)
+
 
 BOOT_BACKUP_FILE = 'boot_backup.py'
 EXPORT_FOLDER = f'__{APP_PREFIX}exports'
@@ -42,13 +35,11 @@ def enable_apps():
   if fs_item_exists(BOOT_FILE):
     os.rename(BOOT_FILE, BOOT_BACKUP_FILE)
   
-  # create bootloader from template
   success, message, exception = template_to_file('boot_apps.tpl', f'{APPS_ROOT}{BOOT_FILE}')
   if not success:
     print(f'Error creating {BOOT_FILE}: {message}')
     return None
 
-  # create boot config file
   if not fs_item_exists(BOOT_CONFIG_FILE):
     config_file = open(BOOT_CONFIG_FILE, 'w')
     config_file.close()
@@ -108,13 +99,11 @@ def create_app(app_name = None, friendly_name = None, set_default = False, hidde
     return(OSError(errno.EEXIST, f'App {app_name} already exists'))
   app_path = f'{APPS_ROOT}{APP_PREFIX}{a_name}'
 
-  # create app's folders
   if fs_item_exists(app_path):
     return(OSError(errno.EEXIST, f'Folder {app_path} already exists'))
   os.mkdir(app_path)
   os.mkdir(app_path + '/lib')
   app_friendly_name = friendly_name or a_name
-  # create app's main from template
   success, message, exception = template_to_file('main.tpl', f'{app_path}/{MAIN_FILE}', app_name = a_name, app_friendly_name = app_friendly_name)
   if not success:
     print(f'Error creating {MAIN_FILE}: {message}')
@@ -204,7 +193,6 @@ def export_app(app_name = None):
     app_path = f'{APPS_ROOT}{app_folder}'
     archive.add(app_path)
     archive.close()
-    # print(f'app {app_name} archived at {exported_file_path}')
     return exported_file_path
   return(OSError(errno.EINVAL, f'{app_name} is not a valid app'))
 

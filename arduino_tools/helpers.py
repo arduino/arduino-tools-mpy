@@ -18,13 +18,6 @@ def get_hash(file_path):
   return hex(int.from_bytes(hash_object.digest(), 'big'))
 
 
-# Generic Helpers
-def version_to_number(ver_str):
-  ma, mi, fi = map(lambda n: int(n), ver_str.split('.'))
-  v_num = ma*100 + mi*10 + fi
-  return v_num
-
-
 # MicroPython Helpers
 def create_plain_boot():
   # create project's main from template
@@ -49,17 +42,8 @@ def fs_getpath():
   return os.getcwd()
 
 
-def delete_fs_item(fs_path, is_folder = False):
-  print('deleting', 'folder:' if is_folder else 'file:', fs_path)
-  if is_folder:
-    # this could be replaced by another call to delete_folder(fs_path)
-    try:
-      os.rmdir(fs_path)
-    except OSError as e:
-      if e.errno == 39:
-        print('folder not empty')
-  else:
-    os.remove(fs_path)
+def delete_fs_item(fs_path, is_folder=False):
+  (os.rmdir if is_folder else os.remove)(fs_path)
 
 
 def read_file(path):
