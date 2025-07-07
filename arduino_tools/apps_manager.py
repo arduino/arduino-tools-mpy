@@ -260,8 +260,7 @@ def import_app(archive_path = None, force_overwrite = False):
 # might turn useful for internet connection details, etc.
 def set_required_app_properties(app_name, **keys):
   if not validate_app(app_name) :
-    print(f'{app_name} is not a valid app')
-    return
+    raise ValueError(f'Invalid app: {app_name}')
   
 
 def list_apps(return_list = False, include_hidden = False):
@@ -280,20 +279,4 @@ def list_apps(return_list = False, include_hidden = False):
 
 def get_apps_list(include_hidden = False):
   return list_apps(return_list = True, include_hidden= include_hidden)
-
-
-
-# TODO:
-# √ rename "setting(s)" to "property(ies)"
-# √ rename "project(s)" to "app(s)"
-
-# - add origin_url and other data to be passed to app creation
-# - check for updates at origin_url
-# - parse origin_url for version-matching
-#   - if remote version is bigger, download
-#   - expand downloaded .tar
-
-
-# The following will likely leverage the App() class
-# - implement @property for get/set (maybe in v 1.0 wrap in App() class)
 

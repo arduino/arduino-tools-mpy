@@ -1,11 +1,11 @@
 '''
-This module is still in experimental mode, and its APIs might change.
-The file "network_credentials.json" will be created in the board's root (be it "/" or "/flash" based on port).
-auto_connect(): will attempt to connect to previously saved networks.
-connect(ssid=None, key=None, interface=None): will cascade down from
-  - connecting to specified ssid:key
-  - using auto_connect()
-  - using interactive connect_to_network() in REPL
+Module still in experimental phase, API might change.
+"network_credentials.json" will be created in root ("/" or "/flash").
+auto_connect(): attempts connection to previously saved networks.
+connect(): will trickle down through
+  - connecting to ssid:key
+  - auto_connect()
+  - interactive connect_to_network() in REPL
 '''
 import json
 import network
@@ -16,7 +16,6 @@ from .common import get_root
 
 '''
 ONLY for ESP32
-
 1000 STAT_IDLE – no connection and no activity,
 1001 STAT_CONNECTING – connecting in progress,
  202 STAT_WRONG_PASSWORD – failed due to incorrect password,
@@ -97,7 +96,6 @@ def get_network_index(network_name):
 def get_network_index_by_mac(network_mac):
   if type(network_mac) == bytes:
     network_mac = binascii.hexlify(network_mac)
-  # networks_list = local_networks_cache['networks']
   networks_list = net_config['known_networks']
   result = list(filter(lambda m:networks_list[m]['mac'] == network_mac, range(len(networks_list))))
   if len(result) > 0:
@@ -112,7 +110,6 @@ def get_ap_settings():
     return ssid, key
   except KeyError:
     return None
-  # return net_config['ap']['ssid'], net_config['ap']['key']
 
 def find_scanned_matches():
   scanned_known_networks = []
@@ -123,7 +120,6 @@ def find_scanned_matches():
     # print('mac: ', (n['mac']).encode())
     
     filtered = [item for item in local_networks_cache['networks'] if item[0] == (n['name']).encode() or binascii.hexlify(item[1]) == n['mac'].encode()]
-    # print('filtered: ', filtered)
     if len(filtered) > 0:
       scanned_known_networks.append(n)
       
@@ -135,7 +131,6 @@ def auto_connect(progress_callback = None):
   load_network_config()
   scan()
   matches = find_scanned_matches()
-  # print(matches)
   connection_success = False
   for i, n in enumerate(matches):
     print(f'{i:<2}: {n}')
@@ -145,7 +140,6 @@ def auto_connect(progress_callback = None):
   return connection_success
   
   
-
 def scan(force_scan = False):
   if net_if == None:
     init_if()
@@ -154,8 +148,6 @@ def scan(force_scan = False):
     return local_networks_cache['networks']
   networks_list = net_if.scan()
   networks_list.sort(key=lambda tup:tup[0])
-  
-  # global local_networks_cache
   local_networks_cache['networks'] = networks_list
   local_networks_cache['last_scan'] = time.mktime(time.localtime())
   return networks_list
@@ -165,10 +157,12 @@ def list_networks(rescan = False):
   scan(rescan)
   list_scan_results()
 
+
 def list_scan_results():
   for i, n in enumerate(local_networks_cache['networks']):
     mac = binascii.hexlify(n[1], ':')
     print(f'{i:>2}: {(n[0]).decode('utf-8'):<20} [{mac}]')
+
 
 def connect_to_network(id = None):
   print(f'*** CONNECT TO NETWORK {id}')
@@ -248,7 +242,6 @@ def connect(ssid = None, key = None, interface = None, timeout = 10, display_pro
       net_if.active(False)
       print(f'Connection to {ssid} failed')
       return None
-  # return connection_status
   return net_if
 
 def get_network_qrcode_string(ssid, password, security):
@@ -273,18 +266,14 @@ def store_net_entry(id, key):
   network_entry['name'] = net_info[0].decode('utf-8')
   network_entry['mac'] = binascii.hexlify(net_info[1])
   network_entry['key'] = key
-  # network_match_index = get_network_index(net_info[0])
   network_match_index = get_network_index_by_mac(net_info[1])
-  # print(f'network match index: {network_match_index}')
   if network_match_index != None:
-    # print('network match index is not None')
     net_config['known_networks'].pop(network_match_index)
   net_config['known_networks'].append(network_entry)
   save_network_config()
   return network_entry
 
 def save_network_config():
-  # fails when field is b''
   try:
     with open(NETWORK_CONFIG_FILE, 'w', encoding = 'utf-8') as f:
       return json.dump(net_config, f, separators=(',', ':'))
@@ -307,4 +296,3 @@ def connection_progress_callback(t):
 # TODO/IDEAS
 # encrypt passwords for stored network credentials
 # use encryption function with a 4-6 numeric PIN to decrypt
-

@@ -2,21 +2,20 @@ from collections import OrderedDict
 from .common import *
 import json
 app_properties_template = OrderedDict({
-                      "name": "",
-                      "friendly_name": "",
-                      "author": "", 
-                      "created": 0, 
-                      "modified": 0, 
-                      "version": "0.0.0", 
-                      "origin_url": "https://arduino.cc", 
-                      "tools_version": "0.0.0"
+  "name": "",
+  "friendly_name": "",
+  "author": "", 
+  "created": 0, 
+  "modified": 0, 
+  "version": "0.0.0", 
+  "origin_url": "https://arduino.cc", 
+  "tools_version": "0.0.0"
 })
 
 
 def get_app_properties(app_name, key = None):
   if not validate_app(app_name):
-    print(f'{app_name} is not a valid project')
-    return
+    raise ValueError(f'Invalid app: {app_name}')
   project_path = get_app(app_name)['path']
   with open(project_path+'/' + APP_PROPERTIES, 'r') as json_file:
     loaded_properties = json.load(json_file)
@@ -33,8 +32,7 @@ def get_app_property(app_name, key):
 
 def update_app_properties(app_name, properties = {}):
   if not validate_app(app_name) :
-    print(f'{app_name} is not a valid project')
-    return
+    raise ValueError(f'Invalid app: {app_name}')
   app_json_path = get_app(app_name)['path'] + '/' + APP_PROPERTIES
   if fs_item_exists(app_json_path):
     with open(app_json_path, 'r') as json_file:
@@ -51,8 +49,7 @@ def update_app_properties(app_name, properties = {}):
 
 def set_app_properties(app_name, **keys):
   if not validate_app(app_name) :
-    print(f'{app_name} is not a valid project')
-    return
+    raise ValueError(f'Invalid app: {app_name}')
   app_json_path = get_app(app_name)['path'] + '/' + APP_PROPERTIES
   if fs_item_exists(app_json_path):
     with open(app_json_path, 'r') as json_file:
