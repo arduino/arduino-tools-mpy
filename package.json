@@ -5,8 +5,12 @@
       "github:arduino/arduino/arduino-tools-mpy/arduino_tools/__init__.py"
     ],
     [
-      "arduino_tools/properties.py",
-      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/properties.py"
+      "arduino_tools/app.py",
+      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/app.py"
+    ],
+    [
+      "arduino_tools/apps_manager.py",
+      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/apps_manager.py"
     ],
     [
       "arduino_tools/common.py",
@@ -21,6 +25,10 @@
       "github:arduino/arduino/arduino-tools-mpy/arduino_tools/files.py"
     ],
     [
+      "arduino_tools/help.txt",
+      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/help.txt"
+    ],
+    [
       "arduino_tools/helpers.py",
       "github:arduino/arduino/arduino-tools-mpy/arduino_tools/helpers.py"
     ],
@@ -29,37 +37,33 @@
       "github:arduino/arduino/arduino-tools-mpy/arduino_tools/loader.py"
     ],
     [
-      "arduino_tools/network.py",
-      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/network.py"
+      "arduino_tools/properties.py",
+      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/properties.py"
     ],
     [
-      "arduino_tools/apps.py",
-      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/apps.py"
+      "arduino_tools/updater.py",
+      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/updater.py"
     ],
     [
-      "arduino_tools/help.txt",
-      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/help.txt"
+      "arduino_tools/wifi_utils.py",
+      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/wifi_utils.py"
     ],
     [
-      "arduino_tools/boot_apps.tpl",
-      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/boot_apps.tpl"
+      "arduino_tools/utils/semver.py",
+      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/utils/semver.py"
     ],
     [
-      "arduino_tools/boot_plain.tpl",
-      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/boot_plain.tpl"
+      "arduino_tools/templates/main.tpl",
+      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/templates/main.tpl"
     ],
     [
-      "arduino_tools/main.tpl",
-      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/main.tpl"
+      "arduino_tools/templates/boot_apps.tpl",
+      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/templates/boot_apps.tpl"
     ],
     [
-      "arduino_tools/ota_updater.py",
-      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/ota_updater.py"
+      "arduino_tools/templates/boot_plain.tpl",
+      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/templates/boot_plain.tpl"
     ],
-    [
-      "arduino_tools/app.py",
-      "github:arduino/arduino/arduino-tools-mpy/arduino_tools/app.py"
-    ]
   ],
   "deps": [
     [
@@ -71,5 +75,5 @@
       "latest"
     ]
   ],
-  "version": "0.7.0"
+  "version": "0.8.0"
 }

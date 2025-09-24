@@ -1,10 +1,9 @@
 from time import time as tm
 import os
-
+from .common import get_root
 def get_template_path(file_name):
-  template_path = '/'.join(__file__.split('/')[:-1]) + f'/{file_name}'
+  template_path = get_root().join(__file__.split('/')[:-1]) + f'/templates/{file_name}'
   return template_path
-
 
 def template_to_file(template_name, destination_file, **variables):
   template_path = get_template_path(template_name)
@@ -19,7 +18,6 @@ def template_to_file(template_name, destination_file, **variables):
   except OSError as e:
     return False, f'{destination_file} not created', e 
   return True, f'{destination_file} created', None
-
 
 ### UNUSED UNTIL EXAMPLES LOADING IS IMPLEMENTED
 def new_file_from_source(file_name = None, destination_path = '.', overwrite = False, source_path = None):

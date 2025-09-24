@@ -34,23 +34,23 @@ def validate_app(app_name):
   else:
     return False
 
-def default_app(app = None, fall_back = None):
-  default_app = '' if app == None else app
-  if app != None:
-    if (not validate_app(default_app)) and default_app != '':
-      return(OSError(9, f'Project {default_app} does not exist'))
+def default_app(app_name = None, fall_back = None):
+  default_app_name = '' if app_name == None else app_name
+  if app_name != None:
+    if (not validate_app(default_app_name)) and default_app_name != '':
+      return(OSError(9, f'Project {default_app_name} does not exist'))
     with open(APPS_ROOT + BOOT_CONFIG_FILE, 'w') as a_cfg:
-      a_cfg.write(default_app)
+      a_cfg.write(default_app_name)
       if fall_back != None:
         a_cfg.write('\n')
         a_cfg.write(fall_back)
   else:
     if fs_item_exists(APPS_ROOT + BOOT_CONFIG_FILE):
       with open(APPS_ROOT + BOOT_CONFIG_FILE, 'r') as a_cfg:
-        default_app = a_cfg.readline().strip()
+        default_app_name = a_cfg.readline().strip()
     else:
-      default_app = None
-    return default_app if default_app != None else None
+      default_app_name = ''
+    return default_app_name if default_app_name != '' else None
 
 # more targeted approach
 def get_app(app_name):  

@@ -1,6 +1,7 @@
 from .common import validate_app
 from .loader import enter_app
 from .properties import get_app_properties, update_app_properties
+from .apps_manager import import_app
 import os
 
 class App:
@@ -26,8 +27,10 @@ class App:
   def get_path(self):
     return self.get_property('path')
 
-  def update_app(self):
-    self.app_updater = __import__('arduino_tools.updater')
-    updater = __import__('arduino_tools.updater')
-    updater.updater.check_for_updates(self.app_name)
-    
+  def update_app(self, path = None):
+    if path is not None:
+      self.app_updater = __import__('arduino_tools.updater')
+      updater = __import__('arduino_tools.updater')
+      updater.updater.check_for_updates(self.app_name)
+    else:
+      import_app(path)

@@ -92,7 +92,7 @@ def install_package(package = None, app = None, url = None):
 # Managing apps
 
 def create_app(app_name = None, friendly_name = None, set_default = False, hidden = False):
-  a_name = app_name or 'untitled'
+  a_name = app_name or f'py_{tm()}'
   a_name = "".join(c for c in a_name if c.isalpha() or c.isdigit() or c==' ' or c == '_').rstrip()
   a_name = a_name.replace(' ', '_')
   if validate_app(app_name):
@@ -250,7 +250,6 @@ def set_required_app_properties(app_name, **keys):
   if not validate_app(app_name) :
     raise ValueError(f'Invalid app: {app_name}')
   
-
 def list_apps(return_list = False, include_hidden = False):
   apps_list = []
   for app in get_apps():

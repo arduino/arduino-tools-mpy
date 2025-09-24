@@ -1,6 +1,9 @@
 from .utils.semver import *
-from .apps_manager import *
-import sys
+from .apps_manager import get_apps_list, get_app_properties, import_app
+from .common import get_root, NETWORK_UPDATE
+
+import json
+from os import mkdir
 
 apps = []
 for app in get_apps_list():
@@ -12,8 +15,7 @@ if NETWORK_UPDATE:
   try:
     import mrequests
   except ImportError:
-    print('Install mrequests')
-    print('https://github.com/SpotlightKid/mrequests')
+    raise ImportError('mrequests module not found. Please install https://github.com/SpotlightKid/mrequests.')
 
 class ResponseWithProgress(mrequests.Response):
     _total_read = 0
@@ -23,20 +25,6 @@ class ResponseWithProgress(mrequests.Response):
         self._total_read += bytes_read
         print("Progress: {:.2f}%".format(self._total_read / (self._content_size * 0.01)))
         return bytes_read
-
-
-# if len(sys.argv) > 1:
-#     url = sys.argv[1]
-
-#     if len(sys.argv) > 2:
-#         filename = sys.argv[2]
-#     else:
-#         filename = url.rsplit("/", 1)[1]
-# else:
-#     host = "http://httpbin.org/"
-#     # host = "http://localhost/"
-#     url = host + "image"
-#     filename = "image.png"
 
 def get_updated_version(app_name, url, version):
     current_version = SemVer.from_string(version)
@@ -84,22 +72,22 @@ def check_for_updates(app_name, force_update = False):
     updated_version = get_updated_version(app_name, ota_url, version)
     if updated_version != None:
         if force_update:
-            return app_update(app_name, ota_url, updated_version)
+            return network_update(app_name, ota_url, updated_version)
         else:
             confirm = input(f'Do you want to update {app_name} from {version} to {updated_version['version']}? (y/n): ')
             if confirm == 'y':
-                return app_update(app_name, ota_url, updated_version)
+                return network_update(app_name, ota_url, updated_version)
     return False
 
-def app_update(app_name, ota_url, updated_version):
+def network_update(app_name, ota_url, updated_version):
     """Download and install app update"""
     update_file_name = updated_version['file_name']
     update_file_url = f'{ota_url}/{update_file_name}'
-    
+    tmp_path = get_root() + 'tmp'
     try:
-        os.mkdir('/tmp')
+        mkdir(tmp_path)
     except OSError:
-        print('/tmp already exists')
+        print(f'{tmp_path} already exists')
     
     download_file_path = f'/tmp/{update_file_name}'
     download_success = file_get(update_file_url, download_file_path)

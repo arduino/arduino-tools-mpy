@@ -103,7 +103,7 @@ function copy_file {
 # Deletes a file from the board using mpremote
 # Only produces output if an error occurs
 function delete_file {
-  output="Deleting $1"
+  output="Deleting File $1"
   echo -n "$output"
   # Run mpremote and capture the error message
   error=$(mpremote rm $1)
@@ -128,7 +128,7 @@ function create_folder {
 }
 
 function delete_folder {
-  output_msg="Deleting $1 on board"
+  output_msg="Deleting Folder $1 on board"
   echo -n "$output_msg"
   delete_folder="${PYTHON_HELPERS}delete_folder(\"/$1\")"
   error=$(mpremote exec "$delete_folder")
@@ -156,7 +156,7 @@ function install_package {
   device_root="${PYTHON_HELPERS}print(get_root())"
   output=$(mpremote exec "$device_root")
   output=$(echo "$output" | tr -d '[:space:]')
-  echo "$output"
+  # echo "Device Root: $output"
   if [ "$output" == "/flash" ]; then
     echo "Board has root in /flash"
     # output=""
@@ -176,7 +176,7 @@ function install_package {
       # only delete and create package directory if it is the first item
       # if the script never made it here, it means no files were found
       if [ $current_item == 1 ]; then
-        output_msg="Deleting $LIBDIR/$PKGDIR on board"
+        output_msg="Deleting Package $LIBDIR/$PKGDIR on board"
         if directory_exists "${LIBDIR}/${PKGDIR}"; then
           echo -n "$output_msg"
           delete_folder="${PYTHON_HELPERS}delete_folder(\"${LIBDIR}/${PKGDIR}\")"
