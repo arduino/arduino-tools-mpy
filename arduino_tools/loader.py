@@ -23,14 +23,23 @@ def enter_default_app():
     return None
 
   if fs_item_exists(APPS_ROOT + BOOT_CONFIG_FILE):
+    boot_entries = []
     with open(APPS_ROOT + BOOT_CONFIG_FILE, 'r') as a_cfg:
-      default_p = a_cfg.readline().strip()
-      reboot_to = a_cfg.readline().strip()
+      boot_entries = a_cfg.readlines()
+    
+    if len(boot_entries) > 1:
+      default_p = boot_entries.pop(0)
+    elif len(boot_entries) == 1:
+      default_p = boot_entries[0]
+    else:
+      default_p = ''
+    default_p = default_p.strip()
     if default_p == '':
       return None
-    if reboot_to != '':
+    if len(boot_entries) > 0:
       with open(APPS_ROOT + BOOT_CONFIG_FILE, 'w') as a_cfg:
-        a_cfg.write(reboot_to)
+        for entry in boot_entries:
+          a_cfg.write(entry)
     return enter_app(default_p)
   return None
 

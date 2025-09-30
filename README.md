@@ -8,6 +8,15 @@ This package adds functionalities for
 
 ## Installation
 
+### Using Lab for MicroPython / MicroPython Package Installer
+
+If you are using [Arduino Lab for MicroPython](https://labs.arduino.cc/en/labs/micropython) to work on your MicroPython projects, you can use the button "Install Package". This will launch [MicroPython Package Installer](https://labs.arduino.cc/en/labs/micropython-package-installer) or take you to the web page to download and install it.
+Once installed, running it once will make sure the application file 
+
+![Install package](assets/package_installer_button.png)
+
+This tool simplifies installing packages from both the official MicroPython index and Arduino's curated package index on any MicroPython board.
+
 ### Using `mpremote`
 
 We must specify the target especially if the framework is already installed and a default app is present, since `mpremote mip` will use the current path to look for or create the `lib` folder.

@@ -12,8 +12,10 @@ class App:
     if not validate_app(app_name):
       raise ValueError('Invalid app')
     self.properties = get_app_properties(app_name)
+    self.friendly_name = self.properties['friendly_name']
     if os.getcwd() != self.get_path():
       enter_app(app_name)
+    
   
   def get_property(self, property):
     return self.properties.get(property)

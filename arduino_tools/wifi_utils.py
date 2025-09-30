@@ -124,11 +124,10 @@ def find_scanned_matches():
     # print('encoded name: ', (n['name']).encode())
     # print('mac: ', (n['mac']).encode())
     
-    filtered = [item for item in _local_networks_cache['networks'] if item[0] == (n['name']).encode() or binascii.hexlify(item[1]) == n['mac'].encode()]
+    # filtered = [item for item in _local_networks_cache['networks'] if item[0] == (n['name']).encode() or binascii.hexlify(item[1]) == n['mac'].encode()]
+    filtered = [item for item in _local_networks_cache['networks'] if binascii.hexlify(item[1]) == n['mac'].encode()]
     if len(filtered) > 0:
       scanned_known_networks.append(n)
-      
-      
   return scanned_known_networks
 
 def auto_connect(progress_callback = None):
