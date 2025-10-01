@@ -54,13 +54,17 @@ The framework exploits the standard behaviour of MicroPython at start/reset/soft
 The framework's boot.py only requires two lines for the following operations:
 
 * import the minimum required parts of arduino_tools (common) from the board's File System (installed as a package in [flash]/lib/arduino_tools)
-* invoke the method `load_app()` to enter the default app's path and apply some temporary settings to configure the running environment (search paths and launch configuration changes) which will be reset at the next start.
+* invoke the method `load_app(app_name = None, cycle_mode = False)` to enter the default app's path and apply some temporary settings to configure the running environment (search paths and launch configuration changes) which will be reset at the next start.
 
 If no default app is set, it will fall back to the `main.py` in the board's root if present.
 No error condition will be generated, as MicroPython is capable of handling the absence of `boot.py` and/or `main.py` at C level.
 
-If a default app is set, the `load_app()` will issue an `os.chdir()` command and enter the app's folder.
+If a default app is set, the `load_app(app_name = None, cycle_mode = False)` will issue an `os.chdir()` command and enter the app's folder.
 MicroPython will automatically run the main.py it finds in its Current Working Directory.
+
+`cycle_mode`: when this parameter is `True`, the loader will pop first item from the `boot.cfg` file and append it to the end.
+This could be useful if you have a board in demo mode (needing to display  multiple applications) or need to run applications in a sequence for RAM or features constraints.
+You could think of a board that needs to connect to Internet to download data, but would not be able to process the data with the RAM available. 
 
 **NOTES:**
 

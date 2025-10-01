@@ -6,4 +6,4 @@ from arduino_tools.app import *
 my_app = App('{app_name}')
 
 # Write your code below (no #) and have fun :)
-print("Hello, I am an app and my name is {app_friendly_name}")
+print("Hello, I am an App and my name is {app_friendly_name}")
