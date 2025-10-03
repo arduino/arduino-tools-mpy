@@ -6,8 +6,16 @@ ARDUINO_TOOLS_MIP_URL="github:arduino/arduino-tools-mpy"
 
 PYTHON_HELPERS='''
 import os
+import sys
+
+def get_root(has_flash_mount = True):
+    if "/flash" in sys.path:
+        return "/flash/"
+    else:
+        return "/"
 
 os.chdir(get_root())
+
 from arduino_tools.apps_manager import create_app, export_app
 
 def is_directory(path):
@@ -50,12 +58,6 @@ def list_apps():
             apps_names += " "
         apps_names += app["name"]
     print(apps_names)
-
-def get_root(has_flash_mount = True):
-    if "/flash" in sys.path:
-        return "/flash/"
-    else:
-        return "/"
 
 os.chdir(get_root())
 '''

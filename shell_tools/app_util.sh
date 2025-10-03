@@ -17,7 +17,7 @@ if ! check_arduino_tools; then
     exit 1
 fi
 
-commands=("help" "create" "install" "backup" "remove" "delete" "list" "run" "help")
+commands=("help" "create" "install" "backup" "remove" "delete" "list" "run")
 function command_valid {
   for command in "${commands[@]}"; do
     if [ "$1" == "$command" ]; then
