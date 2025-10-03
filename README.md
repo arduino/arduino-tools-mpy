@@ -166,6 +166,13 @@ Enable AMP and create a few apps
 >>> default_app()
 'def'
 
+>>> list_apps()
+  abc
+* def
+  ghi
+  new_app
+  friendly_name
+
 >>> import machine
 >>> machine.soft_reset
 
