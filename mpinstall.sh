@@ -73,12 +73,11 @@ function device_present {
 
 # Check if a directory exists
 # Returns 0 if directory exists, 1 if it does not
-function directory_exists {
+function folder_exists {
   # Run mpremote and capture the error message
-  error=$(mpremote fs ls $1)
-
-  # Return error if error message contains "OSError: [Errno 2] ENOENT"
-  if [[ $error == *"OSError: [Errno 2] ENOENT"* ]]; then
+  error=$(mpremote fs ls "$1" 2>&1)
+  # Return error if error message contains "ENOENT" or "No such file or directory" (>= 1.26.0) 
+  if [[ $error == *"ENOENT"* ]] || [[ $error == *"No such file or directory"* ]]; then
       return 1
   else
       return 0
@@ -88,7 +87,7 @@ function directory_exists {
 # Copies a file to the board using mpremote
 # Only produces output if an error occurs
 function copy_file {
-  output="Copying $1 to $2"
+  output="Copying file to board: $1 >> $2"
   echo -n "$output"
   # Run mpremote and capture the error message
   error=$(mpremote cp $1 $2)
@@ -103,7 +102,7 @@ function copy_file {
 # Deletes a file from the board using mpremote
 # Only produces output if an error occurs
 function delete_file {
-  output="Deleting File $1"
+  output="Deleting file on board: $1"
   echo -n "$output"
   # Run mpremote and capture the error message
   error=$(mpremote rm $1)
@@ -116,7 +115,7 @@ function delete_file {
 }
 
 function create_folder {
-  output_msg="Creating $1 on board"
+  output_msg="Creating folder on board: $1"
   echo -n "$output_msg"
   error=$(mpremote mkdir "$1")
   # Print error message if return code is not 0
@@ -128,7 +127,7 @@ function create_folder {
 }
 
 function delete_folder {
-  output_msg="Deleting Folder $1 on board"
+  output_msg="Deleting Folder on board: $1"
   echo -n "$output_msg"
   delete_folder="${PYTHON_HELPERS}delete_folder(\"/$1\")"
   error=$(mpremote exec "$delete_folder")
@@ -140,6 +139,16 @@ function delete_folder {
   echo -e "\r√ $output_msg"
 }
 
+function get_board_lib_path {
+  device_root="${PYTHON_HELPERS}get_root()"
+  output=$(mpremote exec "$device_root")
+  output=$(echo "$output" | tr -d '[:space:]')
+  if [[ -n "$output" ]]; then
+    echo "$output/lib"
+  else
+    echo "lib"
+  fi
+}
 
 function install_package {
   if [[ $1 == "" ]]; then
@@ -152,17 +161,10 @@ function install_package {
   PKGDIR=`basename $1`
   # Source directory for the package on the host
   SRCDIR=`realpath .`
-  # Board's library directory
-  device_root="${PYTHON_HELPERS}print(get_root())"
-  output=$(mpremote exec "$device_root")
-  output=$(echo "$output" | tr -d '[:space:]')
-  # echo "Device Root: $output"
-  if [ "$output" == "/flash" ]; then
-    echo "Board has root in /flash"
-    # output=""
-  fi
-  LIBDIR="$output""lib"
-  create_folder "$LIBDIR"
+
+  LIBDIR="$(get_board_lib_path)"
+  echo "Installing package $PKGNAME from $SRCDIR to $LIBDIR/$PKGDIR"
+
   IFS=$'\n' read -rd '' -a package_files < <(find . -mindepth 1)
   items_count=${#package_files[@]}
   current_item=0
@@ -176,8 +178,8 @@ function install_package {
       # only delete and create package directory if it is the first item
       # if the script never made it here, it means no files were found
       if [ $current_item == 1 ]; then
-        output_msg="Deleting Package $LIBDIR/$PKGDIR on board"
-        if directory_exists "${LIBDIR}/${PKGDIR}"; then
+        output_msg="Deleting Package folder on board: $LIBDIR/$PKGDIR"
+        if folder_exists "${LIBDIR}/${PKGDIR}"; then
           echo -n "$output_msg"
           delete_folder="${PYTHON_HELPERS}delete_folder(\"${LIBDIR}/${PKGDIR}\")"
           mpremote exec "$delete_folder"
@@ -196,7 +198,6 @@ function install_package {
         destination_extension=$source_extension
         clean_item_path="${item_path//.\//}"
         if [[ "$ext" == "mpy" && "$source_extension" == "py" ]]; then
-          echo -n "Compiling $clean_item_path to mpy"
           mpy-cross "$item_path"
           destination_extension=$ext
           copy_file ${clean_item_path%.*}.$destination_extension :$LIBDIR/${destination_subpath%.*}.$destination_extension
@@ -244,7 +245,6 @@ for arg in "$@"; do
     continue
   fi
   if [ "$arg" == "--mpy" ]; then
-    echo "Compiling .py files to .mpy"
     ext="mpy"
     continue
   fi
@@ -266,6 +266,16 @@ if device_present == 0; then
   exit 1
 fi
 
+LIBDIR="$(get_board_lib_path)"
+output_msg=""
+if folder_exists "${LIBDIR}"; then
+  output_msg="Library folder ($LIBDIR) exists on board"  
+else
+  create_folder "$LIBDIR"
+  output_msg="Library folder ($LIBDIR) did not exist on board, it was created."
+fi
+echo -ne "\r\033[2K"
+echo -e "\r√ $output_msg"
 package_number=0
 start_dir=`pwd`
 for package in "${packages[@]}"; do
