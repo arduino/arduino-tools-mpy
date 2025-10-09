@@ -2,8 +2,8 @@
 
 This package adds functionalities for
 
-* MicroPython apps framework
-* file system helpers
+* MicroPython Apps Framework
+* File system helpers
 * WiFi network management
 
 ## Installation
@@ -11,7 +11,7 @@ This package adds functionalities for
 ### Using Lab for MicroPython / MicroPython Package Installer
 
 If you are using [Arduino Lab for MicroPython](https://labs.arduino.cc/en/labs/micropython) to work on your MicroPython projects, you can use the button "Install Package". This will launch [MicroPython Package Installer](https://labs.arduino.cc/en/labs/micropython-package-installer) or take you to the web page to download and install it.
-Once installed, running it once will make sure the application file 
+Once installed, running it once will make sure that the Editor finds it at next time the button is pressed.
 
 ![Install package](assets/package_installer_button.png)
 
